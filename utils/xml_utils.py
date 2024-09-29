@@ -141,13 +141,8 @@ def generate_merged_xml(output_file, temp_xml_files):
     if not os.path.exists(scan_dir):
         os.makedirs(scan_dir)
 
-    if os.path.exists(output_file):
-        merged_output = unique_file(base_output, ext.lstrip('.'), scan_dir)
-    else:
-        if os.path.dirname(output_file) == '':
-            merged_output = scan_dir / output_file
-        else:
-            merged_output = output_file
+    
+    merged_output = unique_file(base_output, ext.lstrip('.'), scan_dir)
 
     merge_xml_files(temp_xml_files, merged_output)
 

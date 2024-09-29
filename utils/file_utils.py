@@ -2,7 +2,6 @@ import re
 import os
 
 def unique_file(base_name, extension, directory):
-    print(f'Basename: {base_name}, Extension: {extension}, Directory: {directory}')
     if not os.path.exists(directory):
         os.makedirs(directory)
     file_name = f"{base_name}.{extension}"
