@@ -1,140 +1,20 @@
 import subprocess
 import os
 import sys
-import ipaddress
-import math
 import re
 import xml.etree.ElementTree as ET
-import argparse
 import threading
-import signal
-from xml.dom import minidom
+from pathlib import Path
 from datetime import datetime
+from xml.dom import minidom
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from core.threading_classes import ActiveProcesses, ThreadKiller
+from core.cli import args_setup
+from utils.ip_utils import parse_ip_range, create_chunks, format_chunk
+from utils.file_utils import unique_file
 
-class ActiveProcesses:
-    def __init__(self):
-        self.processes = []
-        self.lock = threading.Lock()
 
-class ThreadKiller:
-    def __init__(self, active_processes, executor):
-        self.active_processes = active_processes
-        self.executor = executor
-        self.shutdown_event = threading.Event()
-        signal.signal(signal.SIGINT, self.handle_signal)
 
-    def handle_signal(self, signum, frame):
-        print("\nReceived interrupt signal. Shutting down gracefully...")
-        self.shutdown_event.set()
-        self.terminate_processes()
-        self.executor.shutdown(wait=False)
-        sys.exit(0)
-
-    def terminate_processes(self):
-        print("Terminating active Nmap scans...")
-        with self.active_processes.lock:
-            for proc in self.active_processes.processes:
-                if proc.poll() is None:
-                    print(f"Terminating subprocess with PID {proc.pid}")
-                    proc.terminate()
-            self.active_processes.processes.clear()
-
-def args_setup():
-    """
-    Sets up command-line argument parsing.
-    """
-    parser = argparse.ArgumentParser(description="Multithreaded Nmap Scanner with XML Merging")
-    parser.add_argument("-ip", "--ip_range", required=True,
-                        help="IP range or subnet to scan (e.g., 192.168.1.0/24 or 192.168.1.1-192.168.1.255)")
-    parser.add_argument("-n", "--num_chunks", default=2, type=int,
-                        help="Number of chunks to split the IP range into (default: 2)")
-    parser.add_argument("-s", "--scan_type", type=str,
-                        help="Additional scan types/options to run (e.g., '-sV -O')")
-    parser.add_argument("-o", "--output", type=str,
-                        help="Final output XML file to save merged scan results (default: merged_scan.xml)", default="merged_scan.xml")
-    parser.add_argument("-f", "--format", choices=["json", "xml"], default="xml",
-                        help="Output format: json or xml (default: xml). Note: Current script focuses on XML.")
-    parser.add_argument("-t", "--threads", default=2, type=int,
-                        help="Number of concurrent threads (default: 2)")
-    return parser.parse_args()
-
-def parse_ip_range(ip_range):
-    """
-    Parses the IP range into a list of individual IP addresses.
-    Supports CIDR notation and dash-separated ranges.
-    """
-    try:
-        if '/' in ip_range:
-            # CIDR notation
-            network = ipaddress.ip_network(ip_range, strict=False)
-            return [str(ip) for ip in network.hosts()]
-        elif '-' in ip_range:
-            # Dash-separated range (e.g., 192.168.1.1-192.168.1.255 or 192.168.1.1-255)
-            parts = ip_range.split('-')
-            if len(parts) == 2:
-                start_ip = parts[0]
-                end_part = parts[1]
-                if '.' in start_ip:
-                    base = '.'.join(start_ip.split('.')[:-1]) + '.'
-                    print(base)
-                    start = int(start_ip.split('.')[-1])
-                    print(start)
-                    end = int(end_part)
-                    print(end)
-                    print(f"{base}{i}" for i in range(start, end + 1))
-                    return [f"{base}{i}" for i in range(start, end + 1)]
-                # if the first and second in a dash-separated range match, make it a single IP
-                else:
-                    raise ValueError("Invalid IP range format.")
-            else:
-                raise ValueError("Invalid IP range format.")
-        else:
-            # Single IP
-            ip = ipaddress.ip_address(ip_range)
-            print(ip)
-            return [str(ip)]
-    except Exception as e:
-        print(f"Error parsing IP range: {e}")
-        sys.exit(1)
-
-def create_chunks(ip_list, num_chunks):
-    """
-    Splits the list of IPs into the specified number of chunks.
-    """
-    total_ips = len(ip_list)
-    if num_chunks < 1:
-        num_chunks = 1
-    chunk_size = math.ceil(total_ips / num_chunks)
-    chunks = [ip_list[i:i + chunk_size] for i in range(0, total_ips, chunk_size)]
-    return chunks
-
-def format_chunk(chunk):
-    """
-    Formats a chunk of IPs into a comma-separated string for Nmap targeting.
-    """
-    if not chunk:
-        return ""
-    # Check if the chunk is contiguous
-    contiguous = True
-    start = int(ipaddress.IPv4Address(chunk[0]))
-    last_ip = str(chunk[-1])
-    last_octet = last_ip.split('.')[-1]
-    for idx, ip in enumerate(chunk):
-        if int(ipaddress.IPv4Address(ip)) != start + idx:
-            contiguous = False
-            break
-    if contiguous:
-        return f"{chunk[0]}-{last_octet}"
-    else:
-        return ",".join(chunk)
-
-def unique_file(base_name, extension):
-    """
-    Generates a unique filename by appending a timestamp.
-    """
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    return f"{base_name}_{timestamp}.{extension}"
 
 def nmap_scan(chunk, output_file, scan_type=None):
     """
@@ -385,9 +265,15 @@ def main():
     base_output, ext = os.path.splitext(output_file)
     if os.path.exists(output_file):
         merged_output = unique_file(base_output, ext.lstrip('.'))
-        print(f"Warning: {output_file} already exists. Merged results will be saved to {merged_output}.")
     else:
         merged_output = output_file
+
+    scan_dir = Path(__file__).parent / 'scan_results'
+
+    if not os.path.exists(scan_dir):
+        os.makedirs(scan_dir)
+
+    merged_output = scan_dir / merged_output
 
     merge_xml_files(temp_xml_files, merged_output)
 
@@ -397,4 +283,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
