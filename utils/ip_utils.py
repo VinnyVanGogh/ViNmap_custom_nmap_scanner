@@ -14,12 +14,8 @@ def parse_ip_range(ip_range):
                 end_part = parts[1]
                 if '.' in start_ip:
                     base = '.'.join(start_ip.split('.')[:-1]) + '.'
-                    print(base)
                     start = int(start_ip.split('.')[-1])
-                    print(start)
                     end = int(end_part)
-                    print(end)
-                    print(f"{base}{i}" for i in range(start, end + 1))
                     return [f"{base}{i}" for i in range(start, end + 1)]
                 else:
                     raise ValueError("Invalid IP range format.")
@@ -27,7 +23,6 @@ def parse_ip_range(ip_range):
                 raise ValueError("Invalid IP range format.")
         else:
             ip = ipaddress.ip_address(ip_range)
-            print(ip)
             return [str(ip)]
     except Exception as e:
         print(f"Error parsing IP range: {e}")
@@ -56,4 +51,3 @@ def format_chunk(chunk):
         return f"{chunk[0]}-{last_octet}"
     else:
         return ",".join(chunk)
-

@@ -44,7 +44,6 @@ def main():
         try:
             result_file, interactive_output = future.result()
             if result_file:
-                print(f"Scan completed for {chunk}, results saved to {result_file}")
                 format_nmap_xml(result_file, interactive_output, ['nmap'] + chunk.split())
             else:
                 print(f"Scan failed for {chunk}")

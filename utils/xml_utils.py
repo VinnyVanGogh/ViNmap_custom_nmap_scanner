@@ -131,12 +131,9 @@ def merge_xml_files(xml_files, final_output_file):
     with open(final_output_file, 'w', encoding='iso-8859-1') as f:
         f.write(final_xml)
 
-    print(f"Merged XML saved to {final_output_file}")
-
 def generate_merged_xml(output_file, temp_xml_files):
     base_output, ext = os.path.splitext(output_file)
     scan_dir = Path(__file__).parent.parent / 'scan_results'
-    print(f"Saving merged XML to {scan_dir}")
 
     if not os.path.exists(scan_dir):
         os.makedirs(scan_dir)
@@ -148,4 +145,7 @@ def generate_merged_xml(output_file, temp_xml_files):
 
     for temp_file in temp_xml_files:
         os.remove(temp_file)
-    print(f"All scans have been merged into {merged_output}")
+    BOLD = '\033[1m'
+    CYANUNDERLINE = '\033[4;96m'
+    END = '\033[0m'
+    print(f"{BOLD}Scans merged to:\n{END}{CYANUNDERLINE}{merged_output}{END}")

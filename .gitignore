@@ -3,3 +3,4 @@ videos/
 *.log
 __pycache__
 z_old/
+scan_results/
