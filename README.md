@@ -1,6 +1,6 @@
 # ViNmap
 
-![ViNmap Logo](https://github.com/VinnyVanGogh/ViNmap_custom_nmap_scanner/images/logo_option2.png)
+![ViNmap Logo](https://github.com/VinnyVanGogh/ViNmap_custom_nmap_scanner/images/logo_option2.webp)
 
 ## Table of Contents
 
