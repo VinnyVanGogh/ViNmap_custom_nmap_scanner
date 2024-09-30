@@ -3,6 +3,7 @@
 import threading 
 import signal 
 import sys 
+import os
 
 
 class ActiveProcesses:
@@ -11,14 +12,16 @@ class ActiveProcesses:
         self.lock = threading.Lock()
 
 class ThreadKiller:
-    def __init__(self, active_processes, executor):
+    def __init__(self, active_processes, executor, temp_xml):
         self.active_processes = active_processes
         self.executor = executor
         self.shutdown_event = threading.Event()
         signal.signal(signal.SIGINT, self.handle_signal)
 
-    def handle_signal(self, signum, frame):
+    def handle_signal(self, signum, frame, temp_xml):
         print("\nReceived interrupt signal. Shutting down gracefully...")
+        for file in temp_xml:
+            os.remove(file)
         self.shutdown_event.set()
         self.terminate_processes()
         self.executor.shutdown(wait=False)

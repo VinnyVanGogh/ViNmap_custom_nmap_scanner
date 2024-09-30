@@ -5,6 +5,9 @@ import os
 import sys
 import threading 
 import tempfile
+import signal
+import socket
+import re
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
 # from core.threading_classes import ActiveProcesses, ThreadKiller
@@ -20,6 +23,12 @@ def main():
     args = args_setup()
 
     ip_range = args.ip_range
+    
+    domain = re.search(r'([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}', ip_range)
+
+    if domain:
+        ip_range = socket.gethostbyname(ip_range)
+
     num_chunks = args.num_chunks if args.num_chunks else os.cpu_count() // 2
     scan_type = args.scan_type
     if not scan_type:
@@ -38,11 +47,17 @@ def main():
     active_processes = ActiveProcesses()
     executor = ThreadPoolExecutor(max_workers=num_threads)
 
+    killer = ThreadKiller(active_processes, executor, temp_xml_files)
+    # handle signal takes temp_xml as an argument to delete the temp files 
+    signal.signal(signal.SIGINT, killer.handle_signal)
+    # delete temp files on exit
+    signal.signal(signal.SIGTERM, killer.handle_signal)
     future_to_chunk = {
         executor.submit(nmap_scan, chunk, temp_xml, scan_type): chunk
         for chunk, temp_xml in zip(formatted_chunks, temp_xml_files)
     }
 
+    
     for future in as_completed(future_to_chunk):
         chunk = future_to_chunk[future]
         try:
