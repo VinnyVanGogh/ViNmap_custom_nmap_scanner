@@ -82,9 +82,9 @@ ViNmap requires a Python 3.13 build with the Global Interpreter Lock (GIL) disab
 #### **a. Download Python 3.13 Source Code**
 
 ```bash
-wget https://www.python.org/ftp/python/3.13.x/Python-3.13.x.tgz
-tar -xzf Python-3.13.x.tgz
-cd Python-3.13.x
+wget https://www.python.org/ftp/python/3.13.0/Python-3.13.0rc2.tar.xz
+tar -xf Python-3.13.0rc2.tar.xz
+cd Python-3.13.0rc2
 ```
 
 #### **b. Modify the Source to Disable GIL**
