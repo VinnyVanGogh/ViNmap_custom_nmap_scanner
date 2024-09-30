@@ -3,7 +3,8 @@
 import subprocess
 import os
 import sys
-import threading
+import threading 
+import tempfile
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
 # from core.threading_classes import ActiveProcesses, ThreadKiller
@@ -30,7 +31,8 @@ def main():
 
     temp_xml_files = []
     for idx, chunk in enumerate(formatted_chunks, start=1):
-        temp_xml = f"temp_scan_{idx}.xml"
+        temp_dir = tempfile.gettempdir()
+        temp_xml = os.path.join(temp_dir, f"temp_scan_{idx}.xml")
         temp_xml_files.append(temp_xml)
 
     active_processes = ActiveProcesses()

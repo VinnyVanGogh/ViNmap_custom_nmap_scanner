@@ -32,11 +32,12 @@ def nmap_scan(chunk, output_file, scan_type):
     # make a variable that contains what number of chunk we are scanning 
 
     chunk_number = chunk.split('_')[-1]
-    print(f"Scanning chunk {chunk_number} with command: {' '.join(cmd_no_chunk)}")
+    print(f"Scanning chunk with command: {' '.join(cmd_no_chunk)} {chunk_number}")
 
     try:
         process = subprocess.run(cmd, capture_output=True, text=True, check=True)
         interactive_output = process.stdout
+        print(f"nmap output for chunk {chunk_number}:\n{interactive_output}")
         return output_file, interactive_output
     except subprocess.CalledProcessError as e:
         print(f"An error occurred during Nmap scan for {chunk}:\n{e.stderr}")
@@ -45,3 +46,4 @@ def nmap_scan(chunk, output_file, scan_type):
         print("Nmap is not installed or not found in PATH.")
         sys.exit(1)
 
+    print("Nmap scan completed.")

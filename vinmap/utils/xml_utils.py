@@ -178,6 +178,9 @@ options:
         f.write(final_xml)
 
 def generate_merged_xml(output_file, temp_xml_files, scan_type, ip_range):
+    BOLD = '\033[1m'
+    CYANUNDERLINE = '\033[4;96m'
+    END = '\033[0m'
     base_output, ext = os.path.splitext(output_file)
     scan_dir = Path(__file__).parent.parent / 'scan-results'
 
@@ -188,9 +191,7 @@ def generate_merged_xml(output_file, temp_xml_files, scan_type, ip_range):
 
     merge_xml_files(temp_xml_files, merged_output, scan_type, ip_range)
 
-    # copy the merged file to ~/NMAP/ ensuring it has a unique name
     nmap_dir = Path.home() / 'NMAP'
-    print(f"Saving final output to: {nmap_dir}")
     if not os.path.exists(nmap_dir):
         os.makedirs(nmap_dir)
 
@@ -199,11 +200,8 @@ def generate_merged_xml(output_file, temp_xml_files, scan_type, ip_range):
         current_time = datetime.now().strftime("%Y%m%d%H%M%S")
         final_output_file = nmap_dir / f'{final_output_file.stem}_{current_time}{final_output_file.suffix}' 
     subprocess.run(['cp', merged_output, final_output_file])
-    print(f"Copying final output to: {final_output_file}")
 
     for temp_file in temp_xml_files:
         os.remove(temp_file)
-    BOLD = '\033[1m'
-    CYANUNDERLINE = '\033[4;96m'
-    END = '\033[0m'
-    print(f"{BOLD}Scans merged to:\n{END}{CYANUNDERLINE}{merged_output}{END}")
+    print(f"\n{BOLD}Scans merged to:\n{END}{CYANUNDERLINE}{merged_output}{END}\n")
+    print(f"{BOLD}Merged scans copied to:\n{END}{CYANUNDERLINE}{final_output_file}{END}")
