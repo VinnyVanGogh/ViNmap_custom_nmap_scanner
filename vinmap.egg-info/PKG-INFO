@@ -36,6 +36,8 @@ Requires-Dist: xmltodict
 - [Contact](#contact)
 
 ## Introduction
+**PLEASE run with sudo or as root to avoid permission issues, it will NOT copy to ~/NMAP folder if you do not run as root or with sudo since zenmap requires root priviledges**
+
 
 **ViNmap** is a powerful, multithreaded Nmap scanner designed to enhance your network scanning experience. Built with Python 3.13, ViNmap leverages concurrent processing to execute multiple scans in parallel, significantly reducing the time required to analyze large IP ranges. Additionally, it offers robust XML merging capabilities, ensuring that your scan results are consolidated into a single, comprehensive report.
 

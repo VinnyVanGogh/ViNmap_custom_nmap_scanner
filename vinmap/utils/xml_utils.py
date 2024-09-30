@@ -195,6 +195,9 @@ def generate_merged_xml(output_file, temp_xml_files, scan_type, ip_range):
         os.makedirs(nmap_dir)
 
     final_output_file = nmap_dir / merged_output.split('/')[-1]
+    if os.path.exists(final_output_file):
+        current_time = datetime.now().strftime("%Y%m%d%H%M%S")
+        final_output_file = nmap_dir / f'{final_output_file.stem}_{current_time}{final_output_file.suffix}' 
     subprocess.run(['cp', merged_output, final_output_file])
     print(f"Copying final output to: {final_output_file}")
 
