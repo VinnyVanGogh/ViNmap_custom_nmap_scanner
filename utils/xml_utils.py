@@ -46,14 +46,21 @@ def format_nmap_xml(output_file, interactive_output, cmd):
     except Exception as e:
         print(f"An unexpected error occurred while formatting XML {output_file}: {e}")
 
-def merge_xml_files(xml_files, final_output_file):
+def merge_xml_files(xml_files, final_output_file, scan_type, ip_range):
     if not xml_files:
         print("No XML files to merge.")
         sys.exit(1)
 
+    nmaprun_output_file = final_output_file.split('/')[-1]
+
+    nmaprun_args = f"nmap {scan_type} -oX {nmaprun_output_file} {ip_range}"
+    vinmap_args = f"python3.13 ./vinmap.py --scan_type {scan_type} --output {nmaprun_output_file} --ip_range {ip_range}"
+
+    print(f'{nmaprun_args}')
+
     combined_root = ET.Element('nmaprun', {
         'scanner': 'nmap',
-        'args': 'Merged Nmap scans',
+        'args': nmaprun_args,
         'start': str(int(datetime.now().timestamp())),
         'startstr': datetime.now().strftime("%a %b %d %H:%M:%S %Y"),
         'version': '7.93',
@@ -63,7 +70,41 @@ def merge_xml_files(xml_files, final_output_file):
     total_hosts_up = 0
     total_hosts_down = 0
     total_hosts = 0
-    combined_output_text = "Merged Interactive Outputs:\n"
+    combined_output_text = f"""Merged Interactive Outputs:
+<--------------------------------------------------------------------------------------------------------------->
+The equivalent nmap command is: 
+
+    {nmaprun_args}
+
+<--------------------------------------------------------------------------------------------------------------->
+The equivalent vinmap command is:
+
+    {vinmap_args}
+
+<--------------------------------------------------------------------------------------------------------------->
+""" + """
+
+ViNmap Usage:
+usage: vinmap.py [-h] -ip IP_RANGE [-n NUM_CHUNKS] [-s SCAN_TYPE] [-o OUTPUT] [-f {json,xml}] [-t THREADS]
+
+Multithreaded Nmap Scanner with XML Merging
+
+options:
+  -h, --help            show this help message and exit
+  -ip, --ip_range IP_RANGE
+                        IP, IP range or subnet to scan (e.g., 192.168.1.1 or 192.168.1.0/24 or 192.168.1.1-192.168.1.255)
+  -n, --num_chunks NUM_CHUNKS
+                        Number of chunks to split the IP range into (default: half of the cores available on the system)
+  -s, --scan_type SCAN_TYPE
+                        Additional scan types/options to run (e.g., '-sV -O')
+  -o, --output OUTPUT   Final output XML file to save merged scan results (default: 'nmap_' + ip_range + '_merged.xml')
+  -f, --format {json,xml}
+                        Output format: json or xml (default: xml). Note: Current application focuses on XML.
+  -t, --threads THREADS
+                        Number of concurrent threads (default: half of the cores available on the system)
+<--------------------------------------------------------------------------------------------------------------->
+
+"""
 
     for xml_file in xml_files:
         try:
@@ -131,7 +172,7 @@ def merge_xml_files(xml_files, final_output_file):
     with open(final_output_file, 'w', encoding='iso-8859-1') as f:
         f.write(final_xml)
 
-def generate_merged_xml(output_file, temp_xml_files):
+def generate_merged_xml(output_file, temp_xml_files, scan_type, ip_range):
     base_output, ext = os.path.splitext(output_file)
     scan_dir = Path(__file__).parent.parent / 'scan_results'
 
@@ -141,7 +182,7 @@ def generate_merged_xml(output_file, temp_xml_files):
     
     merged_output = unique_file(base_output, ext.lstrip('.'), scan_dir)
 
-    merge_xml_files(temp_xml_files, merged_output)
+    merge_xml_files(temp_xml_files, merged_output, scan_type, ip_range)
 
     for temp_file in temp_xml_files:
         os.remove(temp_file)

@@ -20,15 +20,18 @@ def prepare_ip_ranges(ip_range, num_chunks):
     return formatted_chunks
 
 def nmap_scan(chunk, output_file, scan_type):
-    if not scan_type:
-        scan_type = '-T4 -F'
-
     cmd = [
         'nmap',
         scan_type,
         '-oX', output_file,
         chunk
     ]
+
+    cmd_no_chunk = cmd[:-1]
+    # make a variable that contains what number of chunk we are scanning 
+
+    chunk_number = chunk.split('_')[-1]
+    print(f"Scanning chunk {chunk_number} with command: {' '.join(cmd_no_chunk)}")
 
     try:
         process = subprocess.run(cmd, capture_output=True, text=True, check=True)

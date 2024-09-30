@@ -17,6 +17,8 @@ def main():
     ip_range = args.ip_range
     num_chunks = args.num_chunks if args.num_chunks else os.cpu_count() // 2
     scan_type = args.scan_type
+    if not scan_type:
+        scan_type = "-T4 -F"
     output_file = args.output if args.output else f"nmap_{ip_range.replace('/', '-')}_merged.xml"
     num_threads = args.threads if args.threads else os.cpu_count() // 2
 
@@ -50,7 +52,7 @@ def main():
         except Exception as e:
             print(f"An error occurred while scanning {chunk}: {e}")
 
-    generate_merged_xml(output_file, temp_xml_files)
+    generate_merged_xml(output_file, temp_xml_files, scan_type, args.ip_range)
 
 if __name__ == '__main__':
     main()
