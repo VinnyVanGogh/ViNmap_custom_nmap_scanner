@@ -48,10 +48,7 @@ def main():
     executor = ThreadPoolExecutor(max_workers=num_threads)
 
     killer = ThreadKiller(active_processes, executor, temp_xml_files)
-    # handle signal takes temp_xml as an argument to delete the temp files 
-    signal.signal(signal.SIGINT, killer.handle_signal)
-    # delete temp files on exit
-    signal.signal(signal.SIGTERM, killer.handle_signal)
+
     future_to_chunk = {
         executor.submit(nmap_scan, chunk, temp_xml, scan_type): chunk
         for chunk, temp_xml in zip(formatted_chunks, temp_xml_files)
