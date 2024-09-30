@@ -1,4 +1,0 @@
-images
-scan-results
-vinmap
-z_old

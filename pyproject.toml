@@ -5,7 +5,7 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "vinmap"  # Must match setup.py
+name = "vinmap"
 version = "1.0.0"
 description = "Multithreaded Nmap Scanner with XML Merging"
 readme = "README.md"
@@ -30,4 +30,3 @@ exclude = ["tests*"]
 
 [project.scripts]
 vinmap = "vinmap.vinmap:main" 
-

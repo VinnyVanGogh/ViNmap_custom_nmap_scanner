@@ -3,7 +3,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="vinmap",  # Use lowercase
+    name="vinmap",
     version="1.0.0",
     author="Vince Vasile",
     author_email="computerscience@vinny-van-gogh.com",
@@ -25,9 +25,8 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'vinmap=vinmap.vinmap:main',  # Corrected entry point
+            'vinmap=vinmap.vinmap:main',
         ],
     },
-    # Removed 'scripts' as it's redundant with 'entry_points'
 )
 

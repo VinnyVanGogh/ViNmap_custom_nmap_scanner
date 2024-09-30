@@ -5,3 +5,5 @@ __pycache__
 z_old/
 scan_results/
 scan-results/
+vinmap.egg-info/
+*.egg-info/
