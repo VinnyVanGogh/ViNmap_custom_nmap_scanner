@@ -1,6 +1,6 @@
 # ViNmap
 
-![ViNmap Logo](https://github.com/VinnyVanGogh/ViNmap_custom_nmap_scanner/images/logo_option2.webp)
+![ViNmap Logo](https://raw.githubusercontent.com/VinnyVanGogh/ViNmap_custom_nmap_scanner/refs/heads/main/images/logo_option2.webp)
 
 
 ## Table of Contents
@@ -205,7 +205,7 @@ This command scans the `10.0.0.0/16` subnet, splitting the scan into 8 chunks an
 
 The following screenshots showcase the ViNmap interface and the merged XML report generated after a scan and opened in Zenmap:
 
-![Zenmap Preview](https://github.com/VinnyVanGogh/ViNmap_custom_nmap_scanner/images/zenmap_preview.png)
+![Zenmap Preview](https://github.com/VinnyVanGogh/ViNmap_custom_nmap_scanner/blob/main/images/zenmap_preview.png?raw=true)
 
 ## Contributing
 
