@@ -200,6 +200,7 @@ def generate_merged_xml(output_file, temp_xml_files, scan_type, ip_range):
     subprocess.run(['cp', merged_output, final_output_file])
 
     for temp_file in temp_xml_files:
-        os.remove(temp_file)
+        if os.path.exists(temp_file):
+            os.remove(temp_file)
     print(f"\n{BOLD}Scans merged to:\n{END}{CYANUNDERLINE}{merged_output}{END}\n")
     print(f"{BOLD}Merged scans copied to:\n{END}{CYANUNDERLINE}{final_output_file}{END}")

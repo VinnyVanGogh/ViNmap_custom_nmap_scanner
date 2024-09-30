@@ -37,6 +37,8 @@ def main():
     temp_xml_files = []
     for idx, chunk in enumerate(formatted_chunks, start=1):
         temp_dir = tempfile.gettempdir()
+        if not os.path.exists(temp_dir):
+            os.makedirs(temp_dir)
         temp_xml = os.path.join(temp_dir, f"temp_scan_{idx}.xml")
         temp_xml_files.append(temp_xml)
 
@@ -45,10 +47,12 @@ def main():
 
     killer = ThreadKiller(active_processes, executor, temp_xml_files)
 
+    
     future_to_chunk = {
         executor.submit(nmap_scan, chunk, temp_xml, scan_type): chunk
         for chunk, temp_xml in zip(formatted_chunks, temp_xml_files)
     }
+
 
     
     for future in as_completed(future_to_chunk):
