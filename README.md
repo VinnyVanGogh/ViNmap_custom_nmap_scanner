@@ -2,6 +2,7 @@
 
 ![ViNmap Logo](https://github.com/VinnyVanGogh/ViNmap_custom_nmap_scanner/images/logo_option2.webp)
 
+
 ## Table of Contents
 
 - [Introduction](#introduction)
@@ -15,6 +16,7 @@
   - [Basic Scan](#basic-scan)
   - [Advanced Scan](#advanced-scan)
 - [Configuration](#configuration)
+- [Screenshots](#screenshots)
 - [Contributing](#contributing)
 - [License](#license)
 - [Contact](#contact)
@@ -198,6 +200,12 @@ python vinmap.py -ip 10.0.0.0/16 -n 8 -t 8 -s "-sV -O --script vuln" -o comprehe
 ```
 
 This command scans the `10.0.0.0/16` subnet, splitting the scan into 8 chunks and using 8 threads. It includes version detection, OS detection, and runs vulnerability scripts, saving the merged XML to `comprehensive_scan.xml`.
+
+### Screenshots
+
+The following screenshots showcase the ViNmap interface and the merged XML report generated after a scan and opened in Zenmap:
+
+![Zenmap Preview](https://github.com/VinnyVanGogh/ViNmap_custom_nmap_scanner/images/zenmap_preview.png)
 
 ## Contributing
 
