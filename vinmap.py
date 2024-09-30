@@ -19,7 +19,7 @@ def main():
     scan_type = args.scan_type
     if not scan_type:
         scan_type = "-T4 -F"
-    output_file = args.output if args.output else f"nmap_{ip_range.replace('/', '-')}_merged.xml"
+    output_file = args.output if args.output else f"nmap-{ip_range.replace('/', '-')}-merged.xml"
     num_threads = args.threads if args.threads else os.cpu_count() // 2
 
     # Prepare IP ranges by breaking them into chunks to scan in parallel

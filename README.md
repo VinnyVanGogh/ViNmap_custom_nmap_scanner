@@ -1,12 +1,6 @@
-Certainly! Let's update your `README.md` to include the compatibility with Python 3.13, the use of a Python build with the Global Interpreter Lock (GIL) disabled for true multithreading, and instructions on setting that up. We'll also emphasize how this setup drastically speeds up scans.
-
-Here's the revised `README.md` for your **ViNmap** project:
-
----
-
 # ViNmap
 
-![ViNmap Logo](https://github.com/VinnyVanGogh/ViNmap_custom_nmap_scanner/raw/main/assets/logo.png) *(Replace with your actual logo image URL if available)*
+![ViNmap Logo](https://github.com/VinnyVanGogh/ViNmap_custom_nmap_scanner/images/logo_option2.png)
 
 ## Table of Contents
 

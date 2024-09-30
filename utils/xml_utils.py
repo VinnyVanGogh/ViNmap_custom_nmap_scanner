@@ -51,10 +51,13 @@ def merge_xml_files(xml_files, final_output_file, scan_type, ip_range):
         print("No XML files to merge.")
         sys.exit(1)
 
-    nmaprun_output_file = final_output_file.split('/')[-1]
+    # nmaprun_output_file = final_output_file.split('/')[-1]
+
+    # get the final_output_file and the directory right before, but not the full path -1 gets just the last part, the file, i need the last 2 parts
+    nmaprun_output_file = final_output_file.split('/')[-2] + '/' + final_output_file.split('/')[-1]
 
     nmaprun_args = f"nmap {scan_type} -oX {nmaprun_output_file} {ip_range}"
-    vinmap_args = f"python3.13 ./vinmap.py --scan_type {scan_type} --output {nmaprun_output_file} --ip_range {ip_range}"
+    vinmap_args = f"python3.13 ./vinmap.py -s {scan_type} --output {nmaprun_output_file} -ip {ip_range}"
 
     print(f'{nmaprun_args}')
 
@@ -174,12 +177,11 @@ options:
 
 def generate_merged_xml(output_file, temp_xml_files, scan_type, ip_range):
     base_output, ext = os.path.splitext(output_file)
-    scan_dir = Path(__file__).parent.parent / 'scan_results'
+    scan_dir = Path(__file__).parent.parent / 'scan-results'
 
     if not os.path.exists(scan_dir):
         os.makedirs(scan_dir)
 
-    
     merged_output = unique_file(base_output, ext.lstrip('.'), scan_dir)
 
     merge_xml_files(temp_xml_files, merged_output, scan_type, ip_range)
