@@ -10,10 +10,6 @@ import socket
 import re
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
-# from core.threading_classes import ActiveProcesses, ThreadKiller
-# from core.cli import args_setup
-# from utils.xml_utils import format_nmap_xml, merge_xml_files, generate_merged_xml
-# from utils.scan_utils import prepare_ip_ranges, nmap_scan
 from vinmap.core import ActiveProcesses, ThreadKiller
 from vinmap.core.cli import args_setup
 from vinmap.utils.xml_utils import format_nmap_xml, merge_xml_files, generate_merged_xml

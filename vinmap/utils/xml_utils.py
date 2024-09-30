@@ -61,8 +61,6 @@ def merge_xml_files(xml_files, final_output_file, scan_type, ip_range):
     nmaprun_args = f"nmap {scan_type} -oX {nmaprun_output_file} {ip_range}"
     vinmap_args = f"python3.13 ./vinmap.py -s {scan_type} --output {nmaprun_output_file} -ip {ip_range}"
 
-    print(f'{nmaprun_args}')
-
     combined_root = ET.Element('nmaprun', {
         'scanner': 'nmap',
         'args': nmaprun_args,
