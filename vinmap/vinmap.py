@@ -6,10 +6,14 @@ import sys
 import threading
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from core.threading_classes import ActiveProcesses, ThreadKiller
-from core.cli import args_setup
-from utils.xml_utils import format_nmap_xml, merge_xml_files, generate_merged_xml
-from utils.scan_utils import prepare_ip_ranges, nmap_scan
+# from core.threading_classes import ActiveProcesses, ThreadKiller
+# from core.cli import args_setup
+# from utils.xml_utils import format_nmap_xml, merge_xml_files, generate_merged_xml
+# from utils.scan_utils import prepare_ip_ranges, nmap_scan
+from vinmap.core import ActiveProcesses, ThreadKiller
+from vinmap.core.cli import args_setup
+from vinmap.utils.xml_utils import format_nmap_xml, merge_xml_files, generate_merged_xml
+from vinmap.utils.scan_utils import prepare_ip_ranges, nmap_scan
 
 def main():
     args = args_setup()
@@ -22,10 +26,8 @@ def main():
     output_file = args.output if args.output else f"nmap-{ip_range.replace('/', '-')}-merged.xml"
     num_threads = args.threads if args.threads else os.cpu_count() // 2
 
-    # Prepare IP ranges by breaking them into chunks to scan in parallel
     formatted_chunks = prepare_ip_ranges(ip_range, num_chunks)
 
-    # Prepare temporary output files
     temp_xml_files = []
     for idx, chunk in enumerate(formatted_chunks, start=1):
         temp_xml = f"temp_scan_{idx}.xml"
@@ -34,13 +36,11 @@ def main():
     active_processes = ActiveProcesses()
     executor = ThreadPoolExecutor(max_workers=num_threads)
 
-    # Submit scan tasks
     future_to_chunk = {
         executor.submit(nmap_scan, chunk, temp_xml, scan_type): chunk
         for chunk, temp_xml in zip(formatted_chunks, temp_xml_files)
     }
 
-    # Collect results
     for future in as_completed(future_to_chunk):
         chunk = future_to_chunk[future]
         try:
@@ -56,5 +56,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-

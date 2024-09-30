@@ -3,8 +3,10 @@ import re
 import sys 
 import os
 import xml.etree.ElementTree as ET 
+import subprocess
 from pathlib import Path 
-from utils.file_utils import unique_file
+# from utils.file_utils import unique_file
+from vinmap.utils.file_utils import unique_file
 from xml.dom import minidom 
 from datetime import datetime 
 
@@ -185,6 +187,16 @@ def generate_merged_xml(output_file, temp_xml_files, scan_type, ip_range):
     merged_output = unique_file(base_output, ext.lstrip('.'), scan_dir)
 
     merge_xml_files(temp_xml_files, merged_output, scan_type, ip_range)
+
+    # copy the merged file to ~/NMAP/ ensuring it has a unique name
+    nmap_dir = Path.home() / 'NMAP'
+    print(f"Saving final output to: {nmap_dir}")
+    if not os.path.exists(nmap_dir):
+        os.makedirs(nmap_dir)
+
+    final_output_file = nmap_dir / merged_output.split('/')[-1]
+    subprocess.run(['cp', merged_output, final_output_file])
+    print(f"Copying final output to: {final_output_file}")
 
     for temp_file in temp_xml_files:
         os.remove(temp_file)
