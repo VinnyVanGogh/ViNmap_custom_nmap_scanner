@@ -4,11 +4,7 @@ import subprocess
 from pathlib import Path 
 from datetime import datetime 
 from collections.abc import Iterable
-
-BOLD = '\033[1;37m'
-LINK = '\033[4;34m'
-ORANGE = '\033[1;31m'
-END = '\033[0m'
+from vinmap.core.color_codes import BOLD, END, LINK
 
 def format_filepath(output_file):
     slash = re.compile(r'[/\\]')

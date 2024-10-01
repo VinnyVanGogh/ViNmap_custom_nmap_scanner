@@ -4,11 +4,7 @@ import threading
 import signal 
 import sys 
 import os
-
-BOLD = '\033[1;37m'
-LINK = '\033[4;34m'
-ORANGE = '\033[1;31m'
-END = '\033[0m'
+from vinmap.core.color_codes import BOLD, ORANGE, CYAN, END
 
 class ActiveProcesses:
     def __init__(self):

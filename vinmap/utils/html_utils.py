@@ -2,11 +2,7 @@
 
 import subprocess
 from pathlib import Path
-
-BOLD = '\033[1;37m'
-LINK = '\033[4;34m'
-ORANGE = '\033[1;31m'
-END = '\033[0m'
+from vinmap.core.color_codes import BOLD, LINK, ORANGE, END
 
 def generate_html_report(output_file):
     home = str(Path.home())

@@ -3,11 +3,7 @@ import subprocess
 import sys
 from vinmap.utils.ip_utils import parse_ip_range, create_chunks, format_chunk
 from vinmap.core.cli import args_setup
-
-BOLD = '\033[1;37m'
-CYAN = '\033[;34m'
-ORANGE = '\033[1;31m'
-END = '\033[0m'
+from vinmap.core.color_codes import BOLD, CYAN, ORANGE, LINK, END
 
 def prepare_ip_ranges(ip_range, num_chunks):
     if ',' in ip_range:
@@ -39,7 +35,10 @@ def nmap_scan(chunk, output_file, scan_type):
     cmd_no_output = cmd_no_chunk[:-1]
 
     #TODO: Replace this with a progress bar to show the progress of the scan
-    print(f"{BOLD}Scanning with:{END}\n\t{ORANGE}{' '.join(cmd_no_output)}{END} {CYAN}{output_file} {chunk_number}{END}\n")
+    print(f"""{BOLD}Scanning with:{END}
+    
+        {ORANGE}{' '.join(cmd_no_output)}{END} {LINK}{output_file}{END} {CYAN}{chunk_number}{END}
+""")
     
     try:
         process = subprocess.run(cmd, capture_output=True, text=True, check=True)

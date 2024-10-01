@@ -8,6 +8,7 @@ from pathlib import Path
 from xml.dom import minidom 
 from datetime import datetime 
 from vinmap.utils.file_utils import format_filepath, unique_file, copy_to_nmap_dir, file_cleanup
+from vinmap.core.color_codes import BOLD, END, LINK
 
 def format_nmap_xml(output_file, interactive_output, cmd):
     current_time = datetime.now().strftime("%a %b %d %H:%M:%S %Y")
@@ -174,10 +175,6 @@ options:
 
 
 def generate_merged_xml(output_file, temp_xml_files, scan_type, ip_range):
-    BOLD = '\033[1;37m'
-    LINK = '\033[4;34m'
-    ORANGE = '\033[1;31m'
-    END = '\033[0m'
     scan_dir, base_output, ext = format_filepath(output_file)
 
     merged_output = unique_file(base_output, ext.lstrip('.'), scan_dir)
