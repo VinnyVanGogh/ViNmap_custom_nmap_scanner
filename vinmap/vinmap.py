@@ -19,6 +19,8 @@ from vinmap.core.cli import args_setup
 from vinmap.utils.xml_utils import format_nmap_xml, merge_xml_files, generate_merged_xml
 from vinmap.utils.scan_utils import prepare_ip_ranges, nmap_scan
 from vinmap.utils.html_utils import generate_html_report
+from vinmap.utils.json_utils import convert_to_json
+from vinmap.core.color_codes import BOLD, CYAN, LINK, ORANGE, END
 
 def main():
     args = args_setup()
@@ -75,6 +77,21 @@ def main():
 
     if args.format == 'html':
         generate_html_report(final_output_file)
+
+    if args.format == 'json':
+        # check if final output path is a directory or a file
+        if str(final_output_file)[-1] == '/':
+            final_output_path = str(args.output).split('/')[0:-1]
+        else:
+            cwd = Path.cwd()
+            final_output_path = str(cwd)
+        json_output_filename = str(final_output_file).split('/')[-1].split('.')[0] + '.json'
+        json_output_file = f"{final_output_path}/json-{json_output_filename}"
+        json_path = Path(json_output_file)
+        json_output = convert_to_json(final_output_file, json_path)
+        print(f"{BOLD}JSON output saved to:\n{END}{LINK}{json_output}{END}")
+
+        
 
 if __name__ == '__main__':
     main()

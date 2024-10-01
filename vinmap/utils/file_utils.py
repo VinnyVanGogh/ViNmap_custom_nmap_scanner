@@ -6,6 +6,9 @@ from datetime import datetime
 from collections.abc import Iterable
 from vinmap.core.color_codes import BOLD, END, LINK
 
+
+# def convert_to_json(xml_file_path, json_file_path):
+
 def format_filepath(output_file):
     slash = re.compile(r'[/\\]')
     if slash.search(output_file):
