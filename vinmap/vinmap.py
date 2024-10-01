@@ -75,8 +75,28 @@ def main():
 
     final_output_file = generate_merged_xml(output_file, temp_xml_files, scan_type, args.ip_range)
 
+    print(f"{BOLD}Final output saved to:\n{END}{LINK}{final_output_file}{END}")
+
     if args.format == 'html':
-        generate_html_report(final_output_file)
+
+        if str(final_output_file)[-1] == '/':
+            final_output_path = str(args.output).split('/')[0:-1]
+            html_output_path = final_output_path
+            html_file = html_output_path + str(final_output_file).split('/')[-1].split('.')[0] + '.html'
+        else:
+            cwd = Path.cwd()
+            final_output_path = str(cwd)
+            html_output_path = final_output_path + '/scan-results/html/'
+            html_file = html_output_path + '/html-' + str(final_output_file).split('/')[-1].split('.')[0] + '.html'
+        html_path = Path(html_file)
+        slash_regex = re.compile(r'/')
+        if slash_regex.search(str(args.output)):
+            html_output = generate_html_report(final_output_file, args.output)
+        else:
+            html_output = generate_html_report(final_output_file, html_path)
+        print(f"{BOLD}HTML output saved to:\n{END}{LINK}{html_output}{END}")
+
+
 
     if args.format == 'json':
         # check if final output path is a directory or a file

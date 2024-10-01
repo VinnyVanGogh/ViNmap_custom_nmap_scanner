@@ -3,21 +3,19 @@
 import subprocess
 from pathlib import Path
 from vinmap.core.color_codes import BOLD, LINK, ORANGE, END
+from vinmap.utils.file_utils import format_filepath, unique_file
 
-def generate_html_report(output_file):
-    home = str(Path.home())
-    output_file = str(output_file)
-    output_rm_path = output_file.split('/')[-1].split('.')[0]
-    
-    xml_file = output_rm_path + '.xml'
-    html_file = output_rm_path + '.html' 
-    
-    html_dir = str(Path(__file__).parent.parent) + '/scan-results/' + 'html'
-    
-    xml_path = Path(home + '/NMAP/' + xml_file)
-    html_path = Path(html_dir + '/' + html_file)
+def generate_html_report(xml_file_path, html_file_path):
+    xml_file_name = str(xml_file_path).split('/')[-1]
 
-    html_report = subprocess.run(['xsltproc', xml_path, '-o', html_path])
+    html_dir, base_output, ext = format_filepath(str(html_file_path))
     
-    print(f'{BOLD}HTML Report saved to:{END}\n{LINK}{html_path}{END}')
-    return html_file
+    html_output = unique_file(base_output, 'html', html_dir)
+    
+    html_filename = str(xml_file_path).split('/')[-1].replace('.xml', '.html')
+    
+    html_output = Path(html_dir) / Path(html_filename)
+    
+    html_report = subprocess.run(['xsltproc', xml_file_path, '-o', html_output])
+
+    return html_output
