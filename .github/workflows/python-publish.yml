@@ -1,18 +1,35 @@
 name: Upload Python Package
 
 on:
+  push:
+    paths:
+      - 'setup.cfg'
+      - 'pyproject.toml'
   release:
     types: [published]
-  workflow_dispatch:  # Add this to enable manual triggers
+  workflow_dispatch:  # Allows manual trigger of the workflow
 
 permissions:
   contents: read
 
 jobs:
-  deploy:
-
+  check-version:
     runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.x'
+    - name: Check if version changed
+      run: |
+        python scripts/version_checker.py
+      continue-on-error: false
 
+  deploy:
+    needs: check-version
+    if: success()
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python
