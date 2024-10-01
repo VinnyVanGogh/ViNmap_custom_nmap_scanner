@@ -1,10 +1,7 @@
 name: Upload Python Package
 
 on:
-  push:
-    paths:
-      - 'setup.cfg'
-      - 'pyproject.toml'
+  push: # Allows the workflow to run everytime you push
   workflow_dispatch:  # Allows manual trigger of the workflow
 
 permissions:
