@@ -179,8 +179,16 @@ def generate_merged_xml(output_file, temp_xml_files, scan_type, ip_range):
     BOLD = '\033[1m'
     CYANUNDERLINE = '\033[4;96m'
     END = '\033[0m'
+    
+    slash = re.compile(r'[/\\]')
+
+    if slash.search(output_file):
+        scan_dir = '/'.join(output_file.split('/')[:-1])
+        output_file = (output_file.split('/')[-1])
+    else:
+        scan_dir = Path(__file__).parent.parent / 'scan-results'
+
     base_output, ext = os.path.splitext(output_file)
-    scan_dir = Path(__file__).parent.parent / 'scan-results'
 
     if not os.path.exists(scan_dir):
         os.makedirs(scan_dir)
