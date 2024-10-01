@@ -1,4 +1,9 @@
 # ./vinmap.py
+#TODO: Add more JSON support, currently mostly focused on XML
+#TODO: Clean up the merge xml function and move file handling in that to file_utils for better separation of concerns and updateability
+#TODO: Add an echo wrapper for logging and debugging
+#TODO: Add a progress bar for the progress of each scan to give the user a better idea of how long the scan will take to complete 
+#TODO: Add a gui for the tool to make it more user friendly, and to display the xml output in a more readable format instead of using zenmap
 
 import subprocess
 import os
