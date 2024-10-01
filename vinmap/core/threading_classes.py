@@ -5,6 +5,10 @@ import signal
 import sys 
 import os
 
+BOLD = '\033[1;37m'
+LINK = '\033[4;34m'
+ORANGE = '\033[1;31m'
+END = '\033[0m'
 
 class ActiveProcesses:
     def __init__(self):
@@ -21,7 +25,7 @@ class ThreadKiller:
         signal.signal(signal.SIGTERM, self.handle_signal)
 
     def handle_signal(self, signum, frame):
-        print("\nReceived interrupt signal. Shutting down gracefully...")
+        print(f"{BOLD}Received interrupt signal. Shutting down gracefully...{END}\n")
         for file in self.temp_xml:
             os.remove(file)
         self.shutdown_event.set()
@@ -30,11 +34,11 @@ class ThreadKiller:
         sys.exit(0)
 
     def terminate_processes(self):
-        print("Terminating active Nmap scans...")
+        print(f"{BOLD}Terminating all active subprocesses...{END}\n")
         with self.active_processes.lock:
             for proc in self.active_processes.processes:
                 if proc.poll() is None:
-                    print(f"Terminating subprocess with PID {proc.pid}")
+                    print(f"{ORANGE}Terminating subprocess with PID{END} {LINK}{proc.pid}{END}\n")
                     proc.terminate()
             self.active_processes.processes.clear()
 

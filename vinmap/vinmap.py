@@ -72,7 +72,6 @@ def main():
             print(f"An error occurred while scanning {chunk}: {e}")
 
     final_output_file = generate_merged_xml(output_file, temp_xml_files, scan_type, args.ip_range)
-    print(f"Scan complete. Output saved to {output_file}")
 
     if args.format == 'html':
         generate_html_report(final_output_file)

@@ -5,6 +5,11 @@ from pathlib import Path
 from datetime import datetime 
 from collections.abc import Iterable
 
+BOLD = '\033[1;37m'
+LINK = '\033[4;34m'
+ORANGE = '\033[1;31m'
+END = '\033[0m'
+
 def format_filepath(output_file):
     slash = re.compile(r'[/\\]')
     if slash.search(output_file):
@@ -49,8 +54,10 @@ def copy_to_nmap_dir(merged_output):
     subprocess.run(['cp', merged_output, final_output_file])
     
     if default_dir_regex.search(merged_output):
-        print(f"Deleting:\n{merged_output}\nLeaving:\n{final_output_file}")
         file_cleanup(merged_output)
+
+    print(f"{BOLD}Scans merged to:\n{END}{LINK}{final_output_file}{END}\n")
+
 
     return final_output_file
 
@@ -60,7 +67,6 @@ def file_cleanup(filenames):
     for filename in filenames:
         if os.path.exists(filename):
             os.remove(filename)
-            print(f"Deleted: {filename}")
         else:
             print(f"File not found: {filename}")
 

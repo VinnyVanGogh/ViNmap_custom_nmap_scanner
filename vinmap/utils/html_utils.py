@@ -3,6 +3,11 @@
 import subprocess
 from pathlib import Path
 
+BOLD = '\033[1;37m'
+LINK = '\033[4;34m'
+ORANGE = '\033[1;31m'
+END = '\033[0m'
+
 def generate_html_report(output_file):
     home = str(Path.home())
     output_file = str(output_file)
@@ -15,11 +20,8 @@ def generate_html_report(output_file):
     
     xml_path = Path(home + '/NMAP/' + xml_file)
     html_path = Path(html_dir + '/' + html_file)
-    
-    print('Generating HTML report...', html_file)
 
     html_report = subprocess.run(['xsltproc', xml_path, '-o', html_path])
     
-    print(html_report)
-    
+    print(f'{BOLD}HTML Report saved to:{END}\n{LINK}{html_path}{END}')
     return html_file

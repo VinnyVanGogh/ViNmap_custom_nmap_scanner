@@ -174,10 +174,10 @@ options:
 
 
 def generate_merged_xml(output_file, temp_xml_files, scan_type, ip_range):
-    BOLD = '\033[1m'
-    LINK = '\033[4;96m'
+    BOLD = '\033[1;37m'
+    LINK = '\033[4;34m'
+    ORANGE = '\033[1;31m'
     END = '\033[0m'
-
     scan_dir, base_output, ext = format_filepath(output_file)
 
     merged_output = unique_file(base_output, ext.lstrip('.'), scan_dir)
@@ -188,6 +188,4 @@ def generate_merged_xml(output_file, temp_xml_files, scan_type, ip_range):
 
     file_cleanup(temp_xml_files)
 
-    print(f"\n{BOLD}Scans merged to:\n{END}{LINK}{merged_output}{END}\n")
-    print(f"{BOLD}Merged scans copied to:\n{END}{LINK}{final_output_file}{END}")
     return final_output_file
