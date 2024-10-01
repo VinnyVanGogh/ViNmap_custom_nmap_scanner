@@ -1,6 +1,5 @@
 .venv*
 .env
-videos/
 *.log
 __pycache__
 z_old/

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "vinmap"
-version = "1.1.0"
+version = "1.1.1"
 description = "Multithreaded scanner using nmap for scanning allowing you to use python 3.13 with gil disabled,that provides XML Merging and html/json output options."
 readme = "README.md"
 requires-python = ">=3.7"
