@@ -5,10 +5,9 @@ import os
 import xml.etree.ElementTree as ET 
 import subprocess
 from pathlib import Path 
-# from utils.file_utils import unique_file
-from vinmap.utils.file_utils import unique_file
 from xml.dom import minidom 
 from datetime import datetime 
+from vinmap.utils.file_utils import format_filepath, unique_file, copy_to_nmap_dir, file_cleanup
 
 def format_nmap_xml(output_file, interactive_output, cmd):
     current_time = datetime.now().strftime("%a %b %d %H:%M:%S %Y")
@@ -53,9 +52,7 @@ def merge_xml_files(xml_files, final_output_file, scan_type, ip_range):
         print("No XML files to merge.")
         sys.exit(1)
 
-    # nmaprun_output_file = final_output_file.split('/')[-1]
 
-    # get the final_output_file and the directory right before, but not the full path -1 gets just the last part, the file, i need the last 2 parts
     nmaprun_output_file = final_output_file.split('/')[-2] + '/' + final_output_file.split('/')[-1]
 
     nmaprun_args = f"nmap {scan_type} -oX {nmaprun_output_file} {ip_range}"
@@ -175,40 +172,21 @@ options:
     with open(final_output_file, 'w', encoding='iso-8859-1') as f:
         f.write(final_xml)
 
+
 def generate_merged_xml(output_file, temp_xml_files, scan_type, ip_range):
     BOLD = '\033[1m'
-    CYANUNDERLINE = '\033[4;96m'
+    LINK = '\033[4;96m'
     END = '\033[0m'
-    
-    slash = re.compile(r'[/\\]')
 
-    if slash.search(output_file):
-        scan_dir = '/'.join(output_file.split('/')[:-1])
-        output_file = (output_file.split('/')[-1])
-    else:
-        scan_dir = Path(__file__).parent.parent / 'scan-results'
-
-    base_output, ext = os.path.splitext(output_file)
-
-    if not os.path.exists(scan_dir):
-        os.makedirs(scan_dir)
+    scan_dir, base_output, ext = format_filepath(output_file)
 
     merged_output = unique_file(base_output, ext.lstrip('.'), scan_dir)
 
     merge_xml_files(temp_xml_files, merged_output, scan_type, ip_range)
 
-    nmap_dir = Path.home() / 'NMAP'
-    if not os.path.exists(nmap_dir):
-        os.makedirs(nmap_dir)
+    final_output_file = copy_to_nmap_dir(merged_output)
 
-    final_output_file = nmap_dir / merged_output.split('/')[-1]
-    if os.path.exists(final_output_file):
-        current_time = datetime.now().strftime("%Y%m%d%H%M%S")
-        final_output_file = nmap_dir / f'{final_output_file.stem}_{current_time}{final_output_file.suffix}' 
-    subprocess.run(['cp', merged_output, final_output_file])
+    file_cleanup(temp_xml_files)
 
-    for temp_file in temp_xml_files:
-        if os.path.exists(temp_file):
-            os.remove(temp_file)
-    print(f"\n{BOLD}Scans merged to:\n{END}{CYANUNDERLINE}{merged_output}{END}\n")
-    print(f"{BOLD}Merged scans copied to:\n{END}{CYANUNDERLINE}{final_output_file}{END}")
+    print(f"\n{BOLD}Scans merged to:\n{END}{LINK}{merged_output}{END}\n")
+    print(f"{BOLD}Merged scans copied to:\n{END}{LINK}{final_output_file}{END}")
