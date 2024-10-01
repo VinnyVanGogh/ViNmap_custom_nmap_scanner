@@ -22,7 +22,7 @@ jobs:
     - name: Check if version changed
       run: |
         pip install toml configparser requests
-        python scripts/version_checker.py
+        python .github/scripts/version_checker.py
       continue-on-error: false
 
   deploy:
