@@ -4,12 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "vinmap"
-version = "1.0.3"
+version = "1.0.4"
 description = "Multithreaded Nmap Scanner with XML Merging"
 readme = "README.md"
 requires-python = ">=3.7"
 dependencies = [ "python-nmap", "xmltodict",]
-
 [[project.authors]]
 name = "Vince Vasile"
 email = "computerscience@vinny-van-gogh.com"
