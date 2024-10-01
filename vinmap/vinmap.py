@@ -18,6 +18,7 @@ from vinmap.core import ActiveProcesses, ThreadKiller
 from vinmap.core.cli import args_setup
 from vinmap.utils.xml_utils import format_nmap_xml, merge_xml_files, generate_merged_xml
 from vinmap.utils.scan_utils import prepare_ip_ranges, nmap_scan
+from vinmap.utils.html_utils import generate_html_report
 
 def main():
     args = args_setup()
@@ -71,6 +72,10 @@ def main():
             print(f"An error occurred while scanning {chunk}: {e}")
 
     generate_merged_xml(output_file, temp_xml_files, scan_type, args.ip_range)
+    print(f"Scan complete. Output saved to {output_file}")
+
+    if args.format == 'html':
+        generate_html_report(output_file)
 
 if __name__ == '__main__':
     main()

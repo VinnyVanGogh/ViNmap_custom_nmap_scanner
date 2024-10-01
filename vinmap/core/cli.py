@@ -12,7 +12,7 @@ def args_setup():
                         help="Additional scan types/options to run (e.g., '-sV -O')")
     parser.add_argument("-o", "--output", type=str,
                         help="Final output XML file to save merged scan results (default: 'nmap_' + ip_range + '_merged.xml')")
-    parser.add_argument("-f", "--format", choices=["json", "xml"], default="xml",
+    parser.add_argument("-f", "--format", choices=["html","xml"], default="xml",
                         help="Output format: json or xml (default: xml). Note: Current application focuses on XML.")
     parser.add_argument("-t", "--threads", type=int,
                         help="Number of concurrent threads (default: half of the cores available on the system)")

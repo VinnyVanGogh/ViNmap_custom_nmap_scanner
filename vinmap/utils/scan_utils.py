@@ -1,8 +1,8 @@
 # ./utils/scan_utils.py 
 import subprocess
 import sys
-# from utils.ip_utils import parse_ip_range, create_chunks, format_chunk
 from vinmap.utils.ip_utils import parse_ip_range, create_chunks, format_chunk
+from vinmap.core.cli import args_setup
 
 def prepare_ip_ranges(ip_range, num_chunks):
     if ',' in ip_range:
@@ -21,6 +21,7 @@ def prepare_ip_ranges(ip_range, num_chunks):
     return formatted_chunks
 
 def nmap_scan(chunk, output_file, scan_type):
+
     cmd = [
         'nmap',
         scan_type,

@@ -29,6 +29,8 @@
 
 To achieve true multithreading performance, ViNmap utilizes a Python build with the Global Interpreter Lock (GIL) disabled, enabling real concurrent execution of threads. This setup drastically speeds up scans, making ViNmap an efficient tool for network administrators, security professionals, and enthusiasts.
 
+Additionally allows conversion to html from the merged xml file.
+
 ## Features
 
 - **Real Multithreading:** Utilizes a Python 3.13 build with the GIL disabled, allowing true multithreading and significantly speeding up scans.
@@ -38,6 +40,7 @@ To achieve true multithreading performance, ViNmap utilizes a Python build with 
 - **Dynamic Filename Handling:** Generates unique filenames for merged results to prevent accidental overwriting.
 - **Error Handling:** Robust mechanisms to handle scan failures, XML parsing issues, and file cleanup errors without halting the entire scanning process.
 - **Flexible IP Range Parsing:** Supports CIDR notation and dash-separated IP ranges for versatile scanning targets.
+- **Output Formatting:** Choose between XML and HTML or just XML for the final scan report.
 
 ## Prerequisites
 
@@ -195,7 +198,7 @@ vinmap -ip 192.168.1.0/24 -n 4 -t 4 -s "-sV -O" -o final_scan.xml
 - `-t` or `--threads`: **(Optional)** Number of concurrent threads (default: half of the CPU cores).
 - `-s` or `--scan_type`: **(Optional)** Additional Nmap scan options (e.g., `-sV -O` for version and OS detection).
 - `-o` or `--output`: **(Optional)** Final output XML file name (default: `nmap_<ip_range>_merged.xml`).
-- `-f` or `--format`: **(Optional)** Output format (`json` or `xml`; default: `xml`).
+- `-f` or `--format`: **(Optional)** Output format (`html` or `xml`; default: `xml`). **does not delete the xml file after conversion to html**
 
 ## Configuration
 
