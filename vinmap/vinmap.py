@@ -71,11 +71,11 @@ def main():
         except Exception as e:
             print(f"An error occurred while scanning {chunk}: {e}")
 
-    generate_merged_xml(output_file, temp_xml_files, scan_type, args.ip_range)
+    final_output_file = generate_merged_xml(output_file, temp_xml_files, scan_type, args.ip_range)
     print(f"Scan complete. Output saved to {output_file}")
 
     if args.format == 'html':
-        generate_html_report(output_file)
+        generate_html_report(final_output_file)
 
 if __name__ == '__main__':
     main()

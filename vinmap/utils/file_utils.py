@@ -40,11 +40,17 @@ def copy_to_nmap_dir(merged_output):
     if not os.path.exists(nmap_dir):
         os.makedirs(nmap_dir)
 
+    default_dir_regex = re.compile(r'vinmap/scan-results')
+
     final_output_file = nmap_dir / merged_output.split('/')[-1]
     if os.path.exists(final_output_file):
         current_time = datetime.now().strftime("%Y%m%d%H%M%S")
         final_output_file = nmap_dir / f'{final_output_file.stem}_{current_time}{final_output_file.suffix}' 
     subprocess.run(['cp', merged_output, final_output_file])
+    
+    if default_dir_regex.search(merged_output):
+        print(f"Deleting:\n{merged_output}\nLeaving:\n{final_output_file}")
+        file_cleanup(merged_output)
 
     return final_output_file
 

@@ -190,3 +190,4 @@ def generate_merged_xml(output_file, temp_xml_files, scan_type, ip_range):
 
     print(f"\n{BOLD}Scans merged to:\n{END}{LINK}{merged_output}{END}\n")
     print(f"{BOLD}Merged scans copied to:\n{END}{LINK}{final_output_file}{END}")
+    return final_output_file
