@@ -29,8 +29,9 @@ def nmap_scan(chunk, output_file, scan_type):
     ]
 
     cmd_no_chunk = cmd[:-1]
-    # make a variable that contains what number of chunk we are scanning 
     chunk_number = chunk.split('_')[-1]
+
+    #TODO: Replace this with a progress bar to show the progress of the scan
     print(f"Scanning chunk with command: {' '.join(cmd_no_chunk)} {chunk_number}")
     
     try:
