@@ -1,13 +1,22 @@
 # Make sure to go to settings > action > and tick [ ] Allow GitHub Actions to create and approve pull requests and change to read and write permissions
 name: Remove unused imports
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main  # Adjust as needed
+  pull_request:
+    branches:
+      - main  # Adjust as needed
 
 jobs:
   remove-unused-imports:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Ensure full history for accurate diffs
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -27,9 +36,10 @@ jobs:
         run: |
           git diff --exit-code > removed_imports_diff.txt
         shell: bash
+        continue-on-error: true  # Allow the workflow to continue even if changes are detected
 
       - name: Save diff output to environment variable
-        if: ${{ steps.check_changes.outcome != 'success' }}
+        if: steps.check_changes.conclusion == 'failure'
         run: |
           DIFF_CONTENT=$(cat removed_imports_diff.txt)
           echo "DIFF_CONTENT<<EOF" >> $GITHUB_ENV
@@ -37,7 +47,7 @@ jobs:
           echo "EOF" >> $GITHUB_ENV
 
       - name: Commit changes if unused imports are removed
-        if: ${{ steps.check_changes.outcome != 'success' }}
+        if: steps.check_changes.conclusion == 'failure'
         run: |
           git config --local user.name "github-actions"
           git config --local user.email "github-actions@github.com"
@@ -45,10 +55,11 @@ jobs:
           git commit -m "Fix: Remove unused imports" || echo "No changes to commit"
 
       - name: Push changes and create pull request
-        if: ${{ steps.check_changes.outcome != 'success' }}
+        if: steps.check_changes.conclusion == 'failure'
         uses: peter-evans/create-pull-request@v5
         with:
-          branch: remove-unused-imports
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: remove-unused-imports-${{ github.run_number }}
           commit-message: Remove unused imports
           title: "Fix: Remove unused imports"
           body: |
@@ -57,3 +68,4 @@ jobs:
             ```
             ${{ env.DIFF_CONTENT }}
             ```
+
