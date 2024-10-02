@@ -1,4 +1,4 @@
-name: Check Pull Request Title and Mandatory Checkboxes
+name: Check Pull Request Title and Mandatory Checkboxes ☑
 
 on:
   pull_request:

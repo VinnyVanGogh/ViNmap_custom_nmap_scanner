@@ -1,4 +1,4 @@
-name: Upload Python Package
+name: Upload Python Package 🐍⬆️
 
 on:
   push: # Allows the workflow to run everytime you push

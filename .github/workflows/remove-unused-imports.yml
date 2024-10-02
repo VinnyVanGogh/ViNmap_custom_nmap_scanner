@@ -1,7 +1,6 @@
 # Make sure to go to settings > action > and tick [ ] Allow GitHub Actions to create and approve pull requests and change to read and write permissions
 
-
-name: Remove Unused Imports
+name: Remove Unused Imports❌🔻
 
 on:
   push:
