@@ -13,36 +13,36 @@
     - [Example Configuration](#example-configuration)
 - [Installation](#installation)
     - [Install Nmap](#install-nmap)
-        - [macOS (Using Homebrew):](#macos-using-homebrew)
-        - [Linux (Debian/Ubuntu):](#linux-debianubuntu)
-        - [Windows:](#windows)
+        <!-- - [macOS (Using Homebrew):](#macos-using-homebrew) -->
+        <!-- - [Linux (Debian/Ubuntu):](#linux-debianubuntu) -->
+        <!-- - [Windows:](#windows) -->
     - [Install ViNmap](#install-vinmap)
-        - [Verify the Installation](#verify-the-installation)
+        <!-- - [Verify the Installation](#verify-the-installation) -->
     - [To Install ViNmap in an editable mode:](#to-install-vinmap-in-an-editable-mode)
-        - [Clone the Repository or Create a Fork to Contribute](#clone-the-repository-or-create-a-fork-to-contribute)
-        - [Create a Virtual Environment](#create-a-virtual-environment)
-        - [Activate the Virtual Environment](#activate-the-virtual-environment)
-        - [Upgrade Pip](#upgrade-pip)
-        - [Install Dependencies](#install-dependencies)
-        - [Install ViNmap in Editable mode](#install-vinmap-in-editable-mode)
+        <!-- - [Clone the Repository or Create a Fork to Contribute](#clone-the-repository-or-create-a-fork-to-contribute) -->
+        <!-- - [Create a Virtual Environment](#create-a-virtual-environment) -->
+        <!-- - [Activate the Virtual Environment](#activate-the-virtual-environment) -->
+        <!-- - [Upgrade Pip](#upgrade-pip) -->
+        <!-- - [Install Dependencies](#install-dependencies) -->
+        <!-- - [Install ViNmap in Editable mode](#install-vinmap-in-editable-mode) -->
 - [Usage](#usage)
     - [Command-Line Arguments](#command-line-arguments)
     - [Parameters:](#parameters)
         - [Examples:](#examples)
-            - [Basic Scan](#basic-scan)
-            - [Basic Scan with custom output path and html or json format](#basic-scan-with-custom-output-path-and-html-or-json-format)
-            - [Advanced Scan with Custom Options](#advanced-scan-with-custom-options)
-            - [List scan options](#list-scan-options)
+            <!-- - [Basic Scan](#basic-scan) -->
+            <!-- - [Basic Scan with custom output path and html or json format](#basic-scan-with-custom-output-path-and-html-or-json-format) -->
+            <!-- - [Advanced Scan with Custom Options](#advanced-scan-with-custom-options) -->
+            <!-- - [List scan options](#list-scan-options) -->
 - [Optional Python 3.13 Beta (Advanced)](#optional-python-313-beta)
   - [About Setting up Python 3.13 with GIL disabled](#about-setting-up-python-313-with-disabled-gil)
-    - [Download and Extract Python 3.13 Beta](#download-and-extract-python-313-beta)
-    - [Modify the Source and Configure the Build](#modify-the-source-and-configure-the-build)
-      - [Configure the GIL:](#configure-the-gil)
-      - [Configure the Build:](#configure-the-build)
-    - [Build and Install Python](#build-and-install-python)
-    - [Update the `PATH` Environment Variable (Optional)](#update-the-path-environment-variable-optional)
-    - [Verify the Python Build and Run ViNmap with Python 3.13](#verify-the-python-build-and-run-vinmap-with-python-313)
-    - [Run ViNmap with python3.13](#run-vinmap-with-python313)
+    <!-- - [Download and Extract Python 3.13 Beta](#download-and-extract-python-313-beta) -->
+    <!-- - [Modify the Source and Configure the Build](#modify-the-source-and-configure-the-build) -->
+      <!-- - [Configure the GIL:](#configure-the-gil) -->
+      <!-- - [Configure the Build:](#configure-the-build) -->
+    <!-- - [Build and Install Python](#build-and-install-python) -->
+    <!-- - [Update the `PATH` Environment Variable (Optional)](#update-the-path-environment-variable-optional) -->
+    <!-- - [Verify the Python Build and Run ViNmap with Python 3.13](#verify-the-python-build-and-run-vinmap-with-python-313) -->
+    <!-- - [Run ViNmap with python3.13](#run-vinmap-with-python313) -->
 - [Screenshots](#screenshots)
 - [Contributing](#contributing)
 - [License](#license)
