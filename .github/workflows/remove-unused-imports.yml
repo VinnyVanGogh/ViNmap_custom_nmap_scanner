@@ -29,7 +29,7 @@ jobs:
         shell: bash
 
       - name: Save diff output to environment variable
-        if: ${{ steps.check_changes.outcome == 'failure' }}
+        if: ${{ steps.check_changes.outcome != 'success' }}
         run: |
           DIFF_CONTENT=$(cat removed_imports_diff.txt)
           echo "DIFF_CONTENT<<EOF" >> $GITHUB_ENV
@@ -37,7 +37,7 @@ jobs:
           echo "EOF" >> $GITHUB_ENV
 
       - name: Commit changes if unused imports are removed
-        if: ${{ steps.check_changes.outcome == 'failure' }}
+        if: ${{ steps.check_changes.outcome != 'success' }}
         run: |
           git config --local user.name "github-actions"
           git config --local user.email "github-actions@github.com"
@@ -45,7 +45,7 @@ jobs:
           git commit -m "Fix: Remove unused imports" || echo "No changes to commit"
 
       - name: Push changes and create pull request
-        if: ${{ steps.check_changes.outcome == 'There are changes' }}
+        if: ${{ steps.check_changes.outcome != 'success' }}
         uses: peter-evans/create-pull-request@v5
         with:
           branch: remove-unused-imports
@@ -57,5 +57,4 @@ jobs:
             ```
             ${{ env.DIFF_CONTENT }}
             ```
-
 
