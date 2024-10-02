@@ -3,7 +3,6 @@ import os
 import subprocess
 from pathlib import Path 
 from datetime import datetime 
-from collections.abc import Iterable
 from vinmap.core.color_codes import BOLD, END, LINK
 
 

@@ -4,7 +4,7 @@ import threading
 import signal 
 import sys 
 import os
-from vinmap.core.color_codes import BOLD, ORANGE, CYAN, END
+from vinmap.core.color_codes import BOLD, ORANGE, END
 
 class ActiveProcesses:
     def __init__(self):
