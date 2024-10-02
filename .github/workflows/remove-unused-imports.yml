@@ -54,6 +54,7 @@ jobs:
           echo "DIFF_CONTENT<<EOF" >> $GITHUB_ENV
           echo "$DIFF_CONTENT" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
+          rm removed_imports_diff.txt
 
       # 7. Commit changes if unused imports are removed
       - name: Commit Changes
