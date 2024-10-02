@@ -1,0 +1,23 @@
+name: Check Pull Request Title Format
+
+on:
+  pull_request:
+    types: [opened, edited]
+
+jobs:
+  check_pr_title:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check if PR title follows guidelines
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const prTitle = context.payload.pull_request.title.toLowerCase();
+          
+          const validFeature = prTitle.startsWith("add feature: ");
+          const validFix = prTitle.startsWith("fix: ");
+
+          if (!validFeature && !validFix) {
+            throw new Error(`Invalid PR title. Please use the format "Add feature: [Feature Name]" or "Fix: [Bug Description]".`);
+          }
+

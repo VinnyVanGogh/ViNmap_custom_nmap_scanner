@@ -13,38 +13,18 @@
     - [Example Configuration](#example-configuration)
 - [Installation](#installation)
     - [Install Nmap](#install-nmap)
-        <!-- - [macOS (Using Homebrew):](#macos-using-homebrew) -->
-        <!-- - [Linux (Debian/Ubuntu):](#linux-debianubuntu) -->
-        <!-- - [Windows:](#windows) -->
     - [Install ViNmap](#install-vinmap)
-        <!-- - [Verify the Installation](#verify-the-installation) -->
     - [To Install ViNmap in an editable mode](#to-install-vinmap-in-an-editable-mode)
-        <!-- - [Clone the Repository or Create a Fork to Contribute](#clone-the-repository-or-create-a-fork-to-contribute) -->
-        <!-- - [Create a Virtual Environment](#create-a-virtual-environment) -->
-        <!-- - [Activate the Virtual Environment](#activate-the-virtual-environment) -->
-        <!-- - [Upgrade Pip](#upgrade-pip) -->
-        <!-- - [Install Dependencies](#install-dependencies) -->
-        <!-- - [Install ViNmap in Editable mode](#install-vinmap-in-editable-mode) -->
 - [Usage](#usage)
     - [Command-Line Arguments](#command-line-arguments)
-    - [Parameters:](#parameters)
-        - [Examples:](#examples)
-            <!-- - [Basic Scan](#basic-scan) -->
-            <!-- - [Basic Scan with custom output path and html or json format](#basic-scan-with-custom-output-path-and-html-or-json-format) -->
-            <!-- - [Advanced Scan with Custom Options](#advanced-scan-with-custom-options) -->
-            <!-- - [List scan options](#list-scan-options) -->
+    - [Parameters](#parameters)
+    - [Examples](#examples)
 - [Screenshots](#screenshots)
 - [Optional Python 3.13 Beta (Advanced)](#optional-python-313-beta)
   - [About Setting up Python 3.13 with GIL disabled](#about-setting-up-python-313-with-disabled-gil)
-    <!-- - [Download and Extract Python 3.13 Beta](#download-and-extract-python-313-beta) -->
-    <!-- - [Modify the Source and Configure the Build](#modify-the-source-and-configure-the-build) -->
-      <!-- - [Configure the GIL:](#configure-the-gil) -->
-      <!-- - [Configure the Build:](#configure-the-build) -->
-    <!-- - [Build and Install Python](#build-and-install-python) -->
-    <!-- - [Update the `PATH` Environment Variable (Optional)](#update-the-path-environment-variable-optional) -->
-    <!-- - [Verify the Python Build and Run ViNmap with Python 3.13](#verify-the-python-build-and-run-vinmap-with-python-313) -->
-    <!-- - [Run ViNmap with python3.13](#run-vinmap-with-python313) -->
 - [Contributing](#contributing)
+- [Feature Requests and Bug Reports](#feature-requests-and-bug-reports)
+    - [Formatting Guidelines](#formatting-guidelines)
 - [License](#license)
 - [Contact](#contact)
 
@@ -426,6 +406,47 @@ git push origin feature/your-feature-name
 7. **Create a Pull Request**
 
 Navigate to the original repository and click "Compare & pull request" to submit your changes.
+
+### Formatting Guidelines
+
+When contributing to ViNmap, please follow these guidelines:
+
+- **Title:** Format like "Add feature: [Feature Name]" or "Fix: [Bug Description]".
+- **Description:** Provide a detailed description of the changes made in the pull request, prefixed with the type of change (e.g., Feature, Fix, Update)
+- **Testing:** Include information about how the changes were tested to ensure they work as intended, if applicable.
+- **Documentation:** Update the README or other relevant documentation to reflect the changes made, if necessary.
+
+## Feature Requests and Bug Reports
+
+**We welcome your feedback!**
+
+If you have any feature requests or encounter bugs while using ViNmap, please open an issue on the GitHub repository.
+
+- **Feature Requests:** Suggest new features or enhancements to improve ViNmap.
+
+- **Bug Reports:** Report any issues or unexpected behavior you encounter while using ViNmap.
+
+- **General Feedback:** Share your thoughts, suggestions, or comments about ViNmap.
+
+**Please follow the guidelines and submit detailed information to help us address your requests effectively.**
+
+**We appreciate your feedback and contributions!**
+
+### Formatting Guidelines
+
+When submitting feature requests, please follow these guidelines:
+
+- **Title:** Format like "Feature Request: [Short Description]".
+- **Description:** Provide a detailed description of the feature you'd like to see implemented.
+
+When submitting bug reports, please follow these guidelines:
+
+- **Title:** Format like "Bug Report: [Short Description]".
+- **Description:** Provide a clear and concise description of the bug, including steps to reproduce it.
+
+When providing general feedback, please follow these guidelines:
+- **Title:** Format like "Feedback: [Short Description]".
+- **Description:** Share your thoughts, suggestions, or comments about ViNmap.
 
 ## License
 
