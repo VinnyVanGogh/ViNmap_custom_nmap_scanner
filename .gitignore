@@ -7,3 +7,4 @@ scan_results/
 scan-results/
 vinmap.egg-info/
 *.egg-info/
+*.json
