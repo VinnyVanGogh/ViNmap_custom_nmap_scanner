@@ -4,24 +4,20 @@
 #TODO: Add a progress bar for the progress of each scan to give the user a better idea of how long the scan will take to complete 
 #TODO: Add a gui for the tool to make it more user friendly, and to display the xml output in a more readable format instead of using zenmap
 
-import subprocess
 import os
-import sys
-import threading 
 import tempfile
-import signal
 import socket
 import re
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from vinmap.utils.xml_utils import format_nmap_xml, merge_xml_files, generate_merged_xml
+from vinmap.utils.xml_utils import format_nmap_xml, generate_merged_xml
 from vinmap.utils.scan_utils import prepare_ip_ranges, nmap_scan
 from vinmap.utils.html_utils import generate_html_report
 from vinmap.utils.json_utils import convert_to_json
 from vinmap.core.threading_classes import ActiveProcesses, ThreadKiller
 from vinmap.core.cli import args_setup
 from vinmap.core.cmd_list import nmap_commands
-from vinmap.core.color_codes import BOLD, CYAN, LINK, ORANGE, END
+from vinmap.core.color_codes import BOLD, LINK, ORANGE, END
 
 def main():
     args = args_setup()
@@ -52,7 +48,7 @@ def main():
             if 1 <= choice <= len(scan_choices):
                 chosen_scan = scan_choices[choice - 1]
                 print(f"{BOLD}You have selected:{END} {ORANGE}{chosen_scan}{END}")
-                scan_details = nmap_scan_types[chosen_scan]
+                nmap_scan_types[chosen_scan]
                 scan_option = nmap_scan_types[chosen_scan]['option']
                 print(f"{BOLD}Running nmap scan with the following options:{END}{scan_option}")
                 if scan_type:
@@ -83,7 +79,7 @@ def main():
     active_processes = ActiveProcesses()
     executor = ThreadPoolExecutor(max_workers=num_threads)
 
-    killer = ThreadKiller(active_processes, executor, temp_xml_files)
+    ThreadKiller(active_processes, executor, temp_xml_files)
 
     
     future_to_chunk = {
