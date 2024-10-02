@@ -1,0 +1,63 @@
+# Make sure to go to settings > action > and tick [ ] Allow GitHub Actions to create and approve pull requests and change to read and write permissions
+name: Remove unused imports
+
+on: [push, pull_request]
+
+jobs:
+  remove-unused-imports:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install autoflake
+        run: |
+          pip install autoflake
+
+      - name: Run autoflake to remove unused imports
+        run: |
+          autoflake --remove-all-unused-imports --remove-unused-variables --in-place --recursive .
+
+      - name: Capture removed imports
+        id: removed_imports
+        run: |
+          git diff > removed_imports_diff.txt
+        shell: bash
+
+      - name: Save diff output to environment variable
+        id: save_diff
+        run: |
+          DIFF_CONTENT=$(cat removed_imports_diff.txt)
+          echo "DIFF_CONTENT<<EOF" >> $GITHUB_ENV
+          echo "$DIFF_CONTENT" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Commit changes if unused imports are removed
+        run: |
+          git config --local user.name "github-actions"
+          git config --local user.email "github-actions@github.com"
+          git add .
+          git commit -m "Fix: Remove unused imports" || echo "No changes to commit"
+
+      - name: Check if there are changes
+        id: check_changes
+        run: |
+          git diff --exit-code || echo "There are changes"
+
+      - name: Push changes and create pull request
+        if: steps.check_changes.outcome == 'failure'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          branch: remove-unused-imports
+          commit-message: Remove unused imports
+          title: "Fix: Remove unused imports"
+          body: |
+            The following unused imports were removed:
+
+            ```
+            ${{ env.DIFF_CONTENT }}
+            ```

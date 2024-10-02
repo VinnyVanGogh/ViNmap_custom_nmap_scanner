@@ -357,7 +357,7 @@ python3.13 vinmap.py --help
 
 ## Contributing
 
-![Contributing](https://raw.githubusercontent.com/VinnyVanGogh/ViNmap_custom_nmap_scanner/refs/heads/main/.github/CONTRIBUTING.md)
+![Contributing](https://raw.githubusercontent.com/VinnyVanGogh/ViNmap_custom_nmap_scanner/refs/heads/main/.github/images/contributing.webp)
 
 ## Feature Requests and Bug Reports
 
