@@ -45,7 +45,7 @@ jobs:
           git commit -m "Fix: Remove unused imports" || echo "No changes to commit"
 
       - name: Push changes and create pull request
-        if: ${{ steps.check_changes.outcome == 'failure' }}
+        if: ${{ steps.check_changes.outcome == 'There are changes' }}
         uses: peter-evans/create-pull-request@v5
         with:
           branch: remove-unused-imports
