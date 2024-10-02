@@ -8,22 +8,49 @@
 - [Introduction](#introduction)
 - [Features](#features)
 - [Prerequisites](#prerequisites)
-- [Installation](#installation)
-  - [Python 3.13 with Disabled GIL](#python-313-with-disabled-gil)
-  - [Virtual Environment](#virtual-environment)
-  - [Install Dependencies](#install-dependencies)
-- [Usage](#usage)
-  - [Basic Scan](#basic-scan)
-  - [Advanced Scan](#advanced-scan)
+    - [Optional Prerequisites for enhanced performance:](#optional-prerequisites-for-enhanced-performance)
 - [Configuration](#configuration)
+    - [Example Configuration](#example-configuration)
+- [Installation](#installation)
+    - [Install Nmap](#install-nmap)
+        - [macOS (Using Homebrew):](#macos-using-homebrew)
+        - [Linux (Debian/Ubuntu):](#linux-debianubuntu)
+        - [Windows:](#windows)
+    - [Install ViNmap](#install-vinmap)
+        - [Verify the Installation](#verify-the-installation)
+    - [To Install ViNmap in an editable mode:](#to-install-vinmap-in-an-editable-mode)
+        - [Clone the Repository or Create a Fork to Contribute](#clone-the-repository-or-create-a-fork-to-contribute)
+        - [Create a Virtual Environment](#create-a-virtual-environment)
+        - [Activate the Virtual Environment](#activate-the-virtual-environment)
+        - [Upgrade Pip](#upgrade-pip)
+        - [Install Dependencies](#install-dependencies)
+        - [Install ViNmap in Editable mode](#install-vinmap-in-editable-mode)
+- [Usage](#usage)
+    - [Command-Line Arguments](#command-line-arguments)
+    - [Parameters:](#parameters)
+        - [Examples:](#examples)
+            - [Basic Scan](#basic-scan)
+            - [Basic Scan with custom output path and html or json format](#basic-scan-with-custom-output-path-and-html-or-json-format)
+            - [Advanced Scan with Custom Options](#advanced-scan-with-custom-options)
+            - [List scan options](#list-scan-options)
+- [Optional Python 3.13 Beta (Advanced)](#optional-python-313-beta)
+  - [About Setting up Python 3.13 with GIL disabled](#about-setting-up-python-313-with-disabled-gil)
+    - [Download and Extract Python 3.13 Beta](#download-and-extract-python-313-beta)
+    - [Modify the Source and Configure the Build](#modify-the-source-and-configure-the-build)
+      - [Configure the GIL:](#configure-the-gil)
+      - [Configure the Build:](#configure-the-build)
+    - [Build and Install Python](#build-and-install-python)
+    - [Update the `PATH` Environment Variable (Optional)](#update-the-path-environment-variable-optional)
+    - [Verify the Python Build and Run ViNmap with Python 3.13](#verify-the-python-build-and-run-vinmap-with-python-313)
+    - [Run ViNmap with python3.13](#run-vinmap-with-python313)
 - [Screenshots](#screenshots)
 - [Contributing](#contributing)
 - [License](#license)
 - [Contact](#contact)
 
 ## Introduction
-**PLEASE run with sudo or as root to avoid permission issues, it will NOT copy to ~/NMAP folder if you do not run as root or with sudo since zenmap requires root priviledges**
 
+**PLEASE run with sudo or as root to avoid permission issues, it will NOT copy to ~/NMAP folder if you do not run as root or with sudo since zenmap requires root priviledges**
 
 **ViNmap** is a powerful, multithreaded Nmap scanner designed to enhance your network scanning experience. Built with Python 3.13, ViNmap leverages concurrent processing to execute multiple scans in parallel, significantly reducing the time required to analyze large IP ranges. Additionally, it offers robust XML merging capabilities, ensuring that your scan results are consolidated into a single, comprehensive report.
 
@@ -46,96 +73,99 @@ Additionally allows conversion to html or json from the merged xml file.
 
 Before installing ViNmap, ensure that you have the following prerequisites:
 
-- **Python 3.13:** ViNmap is built and tested with Python 3.13. Ensure you have this version installed.
+- **Minimum Python Version:** Python 3.6 or higher is required to run ViNmap.
 - **Nmap:** ViNmap relies on Nmap for network scanning. Install it using the instructions below based on your operating system.
+
+### Optional Prerequisites for enhanced performance:
+
+- **Python 3.13:** ViNmap is built and tested with Python 3.13. This version is fully optional, but allows disabling the GIL, enabling true multithreading performance. You can use the latest stable Python version if you prefer not to disable the GIL. You can read more about Python 3.13 [here](#about-setting-up-python-313-with-disabled-gil).
 - **Python with Disabled GIL:** For real multithreading capabilities, it's recommended to use a Python build with the Global Interpreter Lock (GIL) disabled.
+
+## Configuration
+
+ViNmap allows you to customize various aspects of the scanning process. You can modify the script or use command-line arguments to tailor scans according to your needs.
+
+### Example Configuration
+
+```bash
+python vinmap.py -ip 10.0.0.0/16 -n 8 -t 8 -s "-sV -O --script vuln" -o comprehensive_scan.xml
+```
+
+This command scans the `10.0.0.0/16` subnet, splitting the scan into 8 chunks and using 8 threads. It includes version detection, OS detection, and runs vulnerability scripts, saving the merged XML to `comprehensive_scan.xml`.
 
 ## Installation
 
 Follow these steps to set up ViNmap on your system:
 
-### 1. Clone the Repository
+### 1. Install Nmap
 
-```bash
-git clone https://github.com/VinnyVanGogh/ViNmap_custom_nmap_scanner.git
-cd ViNmap_custom_nmap_scanner
-```
-
-### 2. Install Nmap
-
-#### **macOS (Using Homebrew):**
+##### **macOS (Using Homebrew):**
 
 ```bash
 brew install nmap
 ```
 
-#### **Linux (Debian/Ubuntu):**
+##### **Linux (Debian/Ubuntu):**
 
 ```bash
 sudo apt-get update
 sudo apt-get install nmap
 ```
 
-#### **Windows:**
+##### **Windows:**
 
 Download and install Nmap from the [official Nmap website](https://nmap.org/download.html).
 
-### 3. Set Up Python 3.13 with Disabled GIL
-
-ViNmap requires a Python 3.13 build with the Global Interpreter Lock (GIL) disabled to achieve real multithreading performance. Follow these steps to set it up:
-
-#### **a. Download Python 3.13 Source Code**
+### 2. Install ViNmap 
 
 ```bash
-wget https://www.python.org/ftp/python/3.13.0/Python-3.13.0rc2.tar.xz
-tar -xf Python-3.13.0rc2.tar.xz
-cd Python-3.13.0rc2
+pip install --upgrade pip
+pip install vinmap
 ```
 
-#### **b. Modify the Source to Disable GIL**
+#### 3. Verify the Installation
 
-Disabling the GIL involves modifying Python's source code, which is an advanced and experimental process. Proceed with caution:
-
-1. **Configure the GIL:**
-
-    ```bash
-    ./configure --disable-gil
-    ```
-
-2. **Configure the Build:**
-
-   ```bash
-   ./configure --prefix=/usr/local/python-3.13-no-gil
-   ```
-
-3. **Build and Install Python:**
-
-   ```bash
-   make -j$(nproc)
-   sudo make install
-   # or you can do `make altinstall` to avoid overwriting the system Python 
-   # sudo make altinstall
-   ```
-
-#### **c. Verify the Python Build**
-
-Ensure that your custom Python build is correctly installed:
+Check if ViNmap is installed correctly with pip, which will show the package details such as version, location, and dependencies:
 
 ```bash
-check_python=$(which python3.13)
-$check_python --version
+pip show vinmap
 ```
 
-### 4. Create a Virtual Environment
-
-Create a virtual environment using the custom Python build:
+Check if the `vinmap` command is available in your terminal and show the help message:
 
 ```bash
-check_python=$(which python3.13)
-$check_python -m venv venv 
+vinmap --help
 ```
 
-### 5. Activate the Virtual Environment
+## To Install ViNmap in an editable mode:
+
+#### Clone the Repository or Create a Fork to Contribute
+
+**A. Clone the ViNmap repository to your local machine:**
+
+```bash
+git clone https://github.com/VinnyVanGogh/ViNmap_custom_nmap_scanner.git
+cd ViNmap_custom_nmap_scanner
+```
+
+**B. Fork the repository and clone your fork:**
+
+```bash
+gh repo fork VinnyVanGogh/ViNmap_custom_nmap_scanner
+cd ViNmap_custom_nmap_scanner
+```
+
+#### Create a Virtual Environment
+
+Create a virtual environment to isolate the dependencies:
+
+```bash
+python -m venv venv
+```
+
+#### Activate the Virtual Environment
+
+Activate the virtual environment based on your operating system:
 
 - **macOS/Linux:**
 
@@ -149,7 +179,7 @@ $check_python -m venv venv
   venv\Scripts\activate
   ```
 
-### 6. Upgrade Pip
+#### Upgrade Pip
 
 Ensure you have the latest version of pip:
 
@@ -157,7 +187,7 @@ Ensure you have the latest version of pip:
 pip install --upgrade pip
 ```
 
-### 7. Install Dependencies
+#### Install Dependencies
 
 Install the required Python packages:
 
@@ -165,52 +195,162 @@ Install the required Python packages:
 pip install -r requirements.txt
 ```
 
+#### Install ViNmap in Editable mode
+
+Make sure you are in the root directory of the cloned repository and run the following command:
+**This will install the package in editable mode, allowing you to make changes to the code and see the changes reflected immediately.**
+
+```bash
+pip install -e .
+```
+
 ## Usage
 
 ViNmap is designed to be user-friendly and flexible. Below are some examples to help you get started.
 
-```bash
-pip3.13 install .
-# or 
-pip install .
-```
-
-### Basic Scan
-
-Perform a basic scan on a single IP or an IP range.
+The easiest way to install is to use pip, and download the latest stable release from pypi.
 
 ```bash
-vinmap -ip 192.168.1.0/24
+pip install vinmap
 ```
 
-### Advanced Scan with Custom Options
+Alternatively, you can clone the repository and install it locally [here](#to-install-vinmap-in-an-editable-mode).
 
-Execute a scan with additional Nmap flags, specify the number of chunks, threads, and output file.
+### Command-Line Arguments 
+
+ViNmap supports various command-line arguments to customize your scans. Here are the available options:
 
 ```bash
-vinmap -ip 192.168.1.0/24 -n 4 -t 4 -s "-sV -O" -o final_scan.xml
+vinmap -ip <ip_range> [-n <num_chunks>] [-t <threads>] [-s <scan_type>] [-l] [-o <path/to/output>] [-f <format>]
 ```
 
-#### **Parameters:**
+### **Parameters:**
 
 - `-ip` or `--ip_range`: **(Required)** The IP range or subnet to scan.
 - `-n` or `--num_chunks`: **(Optional)** Number of chunks to split the IP range into (default: half of the CPU cores).
 - `-t` or `--threads`: **(Optional)** Number of concurrent threads (default: half of the CPU cores).
 - `-s` or `--scan_type`: **(Optional)** Additional Nmap scan options (e.g., `-sV -O` for version and OS detection).
+- `-l` or `--list_scan_types`: **(Optional)** List available scan types, can be ran with or without `-s` \ `--scan_type` argument, and will combine with the `-s` \ `--scan_type` if ran together.
 - `-o` or `--output`: **(Optional)** Final output XML file name (default: `nmap_<ip_range>_merged.xml`).
 - `-f` or `--format`: **(Optional)** Output format (`html`, `json` or `xml`; default: `xml`). **does not delete the xml file after conversion to html or json**
 
-## Configuration
+### Examples:
 
-ViNmap allows you to customize various aspects of the scanning process. You can modify the script or use command-line arguments to tailor scans according to your needs.
+Below are some examples of how to use ViNmap with different command-line arguments.
 
-### Example Configuration
+#### Basic Scan
+
+Perform a basic scan on a single IP or an IP range.
 
 ```bash
-python vinmap.py -ip 10.0.0.0/16 -n 8 -t 8 -s "-sV -O --script vuln" -o comprehensive_scan.xml
+vinmap -ip/--ip_range scanme.nmap.org
 ```
 
-This command scans the `10.0.0.0/16` subnet, splitting the scan into 8 chunks and using 8 threads. It includes version detection, OS detection, and runs vulnerability scripts, saving the merged XML to `comprehensive_scan.xml`.
+#### Basic Scan with custom output path and html or json format
+
+Perform a basic scan on a single IP or an IP range and specify the output file and format.
+
+**This still saves an XML file, but also converts it to html or json**
+  - The json or html file will be saved in the same directory as the xml file, and with the same base name as the xml file.
+
+```bash 
+vinmap -ip/--ip_range 10.0.0.0/24 -o/--output custom_output.xml -f/--format html
+```
+
+#### Advanced Scan with Custom Options
+
+Execute a scan with additional Nmap flags, specify the number of chunks, threads, and output file. 
+  - Default chunks and threads are half of the CPU cores, and default output file is nmap_<ip_range>_merged.xml
+
+```bash
+vinmap -ip 192.168.1.0/24 -n/--num_chunks 8 -t/--threads 8 -s/--scan_type "-sV -O --script vuln" -o/--output comprehensive_scan.xml
+```
+
+#### List scan options
+
+List scan options and select a number to use that as a scan type. 
+  - Can be ran with or without -s argument and will combine with the -s/--scan_type argument if ran together
+
+```bash 
+vinmap --list_scan_types -s/--scan_type "-sV -O --script vuln "
+```
+
+or
+
+```bash 
+vinmap --list_scan_types
+```
+
+## Optional Python 3.13 Beta 
+
+**ViNmap is optimized for Python 3.13, which is currently in beta. To use the latest features and enhancements, you can set up Python 3.13 on your system.**
+
+### About setting up Python 3.13 with Disabled GIL
+
+#### **WARNING:** Disabling the Global Interpreter Lock (GIL) can lead to instability and unexpected behavior in Python. Use this feature at your own risk.
+
+ViNmap requires a Python 3.13 build with the Global Interpreter Lock (GIL) disabled to achieve real multithreading performance. Follow these steps to set it up:
+
+**Note:** These instructions are for advanced users who are comfortable with building Python from source and modifying the GIL settings.
+
+### Download and Extract Python 3.13 Beta
+
+```bash
+wget https://www.python.org/ftp/python/3.13.0/Python-3.13.0rc2.tar.xz
+tar -xf Python-3.13.0rc2.tar.xz
+cd Python-3.13.0rc2
+```
+
+### Modify the Source and Configure the Build
+
+
+#### Configure the GIL:
+
+```bash
+./configure --disable-gil
+```
+
+#### Configure the Build:
+
+```bash
+./configure --prefix=/usr/local/python-3.13-no-gil
+```
+
+### Build and Install Python
+
+```bash
+make -j$(nproc)
+sudo make install
+# or you can do `make altinstall` to avoid overwriting the system Python 
+# sudo make altinstall
+```
+
+### Update the `PATH` Environment Variable (Optional)
+
+**Update the `PATH` Environment Variable if you want to use the new Python installation by default.**
+
+Add the new Python installation to your `PATH`:
+
+```bash
+export PATH=/usr/local/python-3.13-no-gil/bin:$PATH
+```
+
+### Verify the Python Build and Run ViNmap with Python 3.13
+
+**Verify the Python Build and Installation:**
+
+Ensure that your custom Python build is correctly installed:
+
+```bash
+check_python=$(which python3.13)
+$check_python --version
+```
+
+### Run ViNmap with python3.13
+
+```bash
+python3.13 vinmap.py --help
+```
 
 ### Screenshots
 
@@ -228,13 +368,12 @@ This command scans the `10.0.0.0/16` subnet, splitting the scan into 8 chunks an
 - **OS Detection Scan ran with default options:**
 ![OS Detection Output](https://github.com/VinnyVanGogh/ViNmap_custom_nmap_scanner/blob/main/.github/images/os_output_example.png?raw=true)
 
-
+- **List Scan Types ran with scan types as an argument:**
+![List Scan Types Output](https://github.com/VinnyVanGogh/ViNmap_custom_nmap_scanner/blob/main/.github/images/list_output_example.png?raw=true)
 
 The following screenshots showcase the Zenmap interface and the merged XML report generated by ViNmap.
 
 ![Zenmap Preview](https://github.com/VinnyVanGogh/ViNmap_custom_nmap_scanner/blob/main/.github/images/zenmap_preview.png?raw=true)
-
-
 
 ## Contributing
 
@@ -242,40 +381,51 @@ Contributions are welcome! If you'd like to enhance ViNmap, follow these steps:
 
 1. **Fork the Repository**
 
-   Click the "Fork" button at the top-right corner of the repository page to create your own copy.
+Click the "Fork" button at the top-right corner of the repository page to create your own copy or use the following command to create a fork:
+
+**If you use GitHub CLI you can skip step 2.**
+
+```bash
+gh repo fork VinnyVanGogh/ViNmap_custom_nmap_scanner
+```
 
 2. **Clone Your Fork**
 
-   ```bash
-   git clone https://github.com/your_username/ViNmap_custom_nmap_scanner.git
-   cd ViNmap_custom_nmap_scanner
-   ```
+```bash
+git clone https://github.com/your_username/ViNmap_custom_nmap_scanner.git
+```
+
+3. cd into the cloned repository
+
+```bash
+cd ViNmap_custom_nmap_scanner
+```
 
 3. **Create a New Branch**
 
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
+```bash
+git checkout -b feature/your-feature-name
+```
 
 4. **Make Your Changes**
 
-   Implement your feature or fix a bug.
+Implement your feature or fix a bug.
 
 5. **Commit Your Changes**
 
-   ```bash
-   git commit -m "Add feature: your feature description"
-   ```
+```bash
+git commit -m "Add feature: your feature description"
+```
 
 6. **Push to Your Fork**
 
-   ```bash
-   git push origin feature/your-feature-name
-   ```
+```bash
+git push origin feature/your-feature-name
+```
 
 7. **Create a Pull Request**
 
-   Navigate to the original repository and click "Compare & pull request" to submit your changes.
+Navigate to the original repository and click "Compare & pull request" to submit your changes.
 
 ## License
 

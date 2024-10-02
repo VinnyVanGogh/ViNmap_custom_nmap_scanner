@@ -14,12 +14,13 @@ import socket
 import re
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from vinmap.core import ActiveProcesses, ThreadKiller
-from vinmap.core.cli import args_setup
 from vinmap.utils.xml_utils import format_nmap_xml, merge_xml_files, generate_merged_xml
 from vinmap.utils.scan_utils import prepare_ip_ranges, nmap_scan
 from vinmap.utils.html_utils import generate_html_report
 from vinmap.utils.json_utils import convert_to_json
+from vinmap.core.threading_classes import ActiveProcesses, ThreadKiller
+from vinmap.core.cli import args_setup
+from vinmap.core.cmd_list import nmap_commands
 from vinmap.core.color_codes import BOLD, CYAN, LINK, ORANGE, END
 
 def main():
@@ -34,8 +35,38 @@ def main():
 
     num_chunks = args.num_chunks if args.num_chunks else os.cpu_count() // 2
     scan_type = args.scan_type
+
+    if args.list_scan_types:
+        nmap_scan_types = nmap_commands()
+        option_number = 0
+        scan_choices = []
+        
+        for scan, details in nmap_scan_types.items():
+            option_number += 1
+            scan_choices.append(scan)
+            print(f"{LINK}{option_number}.{END} {ORANGE}{scan}{END}")
+
+        try:
+            print(f"{BOLD}Please choose a scan type from the list above: {END}")
+            choice = int(input())
+            if 1 <= choice <= len(scan_choices):
+                chosen_scan = scan_choices[choice - 1]
+                print(f"{BOLD}You have selected:{END} {ORANGE}{chosen_scan}{END}")
+                scan_details = nmap_scan_types[chosen_scan]
+                scan_option = nmap_scan_types[chosen_scan]['option']
+                print(f"{BOLD}Running nmap scan with the following options:{END}{scan_option}")
+                if scan_type:
+                    scan_type += " " + scan_option
+                else:
+                    scan_type = scan_option
+            else:
+                print("Invalid choice, please enter a number from the list.")
+        except ValueError:
+            print("Invalid input, please enter a valid number.")
+
     if not scan_type:
         scan_type = "-T4 -F"
+
     output_file = args.output if args.output else f"nmap-{ip_range.replace('/', '-')}-merged.xml"
     num_threads = args.threads if args.threads else os.cpu_count() // 2
 
