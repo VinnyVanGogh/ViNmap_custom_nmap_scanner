@@ -22,14 +22,14 @@ jobs:
         run: |
           autoflake --remove-all-unused-imports --remove-unused-variables --in-place --recursive .
 
-      - name: Capture removed imports
-        id: removed_imports
+      - name: Check for changes in imports
+        id: check_changes
         run: |
-          git diff > removed_imports_diff.txt
+          git diff --exit-code > removed_imports_diff.txt || echo "There are changes"
         shell: bash
 
       - name: Save diff output to environment variable
-        id: save_diff
+        if: ${{ steps.check_changes.outcome == 'failure' }}
         run: |
           DIFF_CONTENT=$(cat removed_imports_diff.txt)
           echo "DIFF_CONTENT<<EOF" >> $GITHUB_ENV
@@ -37,19 +37,15 @@ jobs:
           echo "EOF" >> $GITHUB_ENV
 
       - name: Commit changes if unused imports are removed
+        if: ${{ steps.check_changes.outcome == 'failure' }}
         run: |
           git config --local user.name "github-actions"
           git config --local user.email "github-actions@github.com"
           git add .
           git commit -m "Fix: Remove unused imports" || echo "No changes to commit"
 
-      - name: Check if there are changes
-        id: check_changes
-        run: |
-          git diff --exit-code || echo "There are changes"
-
       - name: Push changes and create pull request
-        if: steps.check_changes.outcome == 'failure'
+        if: ${{ steps.check_changes.outcome == 'failure' }}
         uses: peter-evans/create-pull-request@v5
         with:
           branch: remove-unused-imports
@@ -61,3 +57,5 @@ jobs:
             ```
             ${{ env.DIFF_CONTENT }}
             ```
+
+
