@@ -5,6 +5,7 @@ from vinmap.utils.ip_utils import parse_ip_range, create_chunks, format_chunk
 from vinmap.core.cli import args_setup
 from vinmap.core.color_codes import BOLD, CYAN, ORANGE, LINK, END
 
+
 def prepare_ip_ranges(ip_range, num_chunks):
     if ',' in ip_range:
         ip_list = ip_range.split(',')
