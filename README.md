@@ -2,7 +2,6 @@
 
 ![ViNmap Logo](https://raw.githubusercontent.com/VinnyVanGogh/ViNmap_custom_nmap_scanner/refs/heads/main/.github/images/logo.webp)
 
-
 ## Table of Contents
 
 - [Introduction](#introduction)
