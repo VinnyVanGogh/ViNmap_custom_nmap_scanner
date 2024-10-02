@@ -3,7 +3,6 @@
 #TODO: Add an echo wrapper for logging and debugging
 #TODO: Add a progress bar for the progress of each scan to give the user a better idea of how long the scan will take to complete 
 #TODO: Add a gui for the tool to make it more user friendly, and to display the xml output in a more readable format instead of using zenmap
-import random
 
 import os
 import tempfile
