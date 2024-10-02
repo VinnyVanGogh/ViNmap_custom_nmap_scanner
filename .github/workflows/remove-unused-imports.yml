@@ -1,5 +1,7 @@
 # Make sure to go to settings > action > and tick [ ] Allow GitHub Actions to create and approve pull requests and change to read and write permissions
-name: Remove unused imports
+
+
+name: Remove Unused Imports
 
 on:
   push:
@@ -12,60 +14,71 @@ on:
 jobs:
   remove-unused-imports:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      # 1. Checkout the repository with full history
+      - name: Checkout Repository
+        uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Ensure full history for accurate diffs
+          fetch-depth: 0  # Ensures full history for accurate diffs
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
+      # 2. Set up Python environment
+      - name: Set Up Python
+        uses: actions/setup-python@v4
         with:
-          python-version: '3.x'
+          python-version: '3.x'  # Specify your Python version
 
+      # 3. Install autoflake
       - name: Install autoflake
         run: |
           pip install autoflake
 
-      - name: Run autoflake to remove unused imports
+      # 4. Run autoflake to remove unused imports and variables
+      - name: Run autoflake
         run: |
           autoflake --remove-all-unused-imports --remove-unused-variables --in-place --recursive .
 
-      - name: Check for changes in imports
+      # 5. Check for changes in imports
+      - name: Check for Changes
         id: check_changes
         run: |
           git diff --exit-code > removed_imports_diff.txt
         shell: bash
-        continue-on-error: true  # Allow the workflow to continue even if changes are detected
+        continue-on-error: true  # Allows workflow to continue even if changes are detected
 
-      - name: Save diff output to environment variable
-        if: steps.check_changes.conclusion == 'failure'
+      # 6. Save diff output to environment variable (only if changes are detected)
+      - name: Save Diff Output
+        if: steps.check_changes.outcome == 'failure'
         run: |
           DIFF_CONTENT=$(cat removed_imports_diff.txt)
           echo "DIFF_CONTENT<<EOF" >> $GITHUB_ENV
           echo "$DIFF_CONTENT" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
-      - name: Commit changes if unused imports are removed
-        if: steps.check_changes.conclusion == 'failure'
+      # 7. Commit changes if unused imports are removed
+      - name: Commit Changes
+        if: steps.check_changes.outcome == 'failure'
         run: |
-          git config --local user.name "github-actions"
-          git config --local user.email "github-actions@github.com"
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git add .
-          git commit -m "Fix: Remove unused imports" || echo "No changes to commit"
+          git commit -m "chore: Remove unused imports" || echo "No changes to commit"
 
-      - name: Push changes and create pull request
-        if: steps.check_changes.conclusion == 'failure'
+      # 8. Push changes and create a pull request
+      - name: Create Pull Request
+        if: steps.check_changes.outcome == 'failure'
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: Remove unused imports"
           branch: remove-unused-imports-${{ github.run_number }}
-          commit-message: Remove unused imports
-          title: "Fix: Remove unused imports"
+          title: "chore: Remove unused imports"
           body: |
-            The following unused imports were removed:
+            The following unused imports and variables were removed by [autoflake](https://github.com/myint/autoflake):
 
             ```
             ${{ env.DIFF_CONTENT }}
             ```
+
+          labels: automated
 
